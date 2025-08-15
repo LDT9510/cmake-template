@@ -1,7 +1,8 @@
-#include <fmt/format.h> 
+#include <fmt/format.h>
 
-int main() {
-    fmt::println("Hello World");
+int main()
+{
+	fmt::println("Hello World");
 
-    return 0;
+	return 0;
 }

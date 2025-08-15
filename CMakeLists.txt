@@ -46,7 +46,7 @@ elseif (CXX_COMPILER_IS_MSVC_LIKE)
     target_compile_options(${PROJECT_NAME} PRIVATE
             /W4
             /WX
-            /std=c++20
+            /std:c++20
     )
 else ()
     message(FATAL_ERROR "Unknown compiler frontend.")

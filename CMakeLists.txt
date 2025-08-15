@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project("CMakeTemplateExample" CXX)
+project("cmake-template" CXX)
 
 # set the CMake modules path, required to import using " include(...)"
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -9,6 +9,8 @@ include("GlobalConfig")
 include("Options")
 include("SymlinkContent")
 include("ExternalsUtils")
+include("Definitions")
+include("Utils")
 
 # ========== Dependencies ===========
 # order matters for transitive dependencies
@@ -53,28 +55,13 @@ endif ()
 
 if (NOT TARGET_PLATFORM_IS_WEB)
     # content handling
-    SymlinkContent(${PROJECT_NAME} "contents")
+    symlink_content(${PROJECT_NAME} "contents")
 else ()
     # handle content when targeting the web, this is different 
     # from other platforms
 endif ()
 
-# source code macro pre-definitions
-function(AddMacroDefinitions definitions)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE ${definitions})
-endfunction()
-
-# build type
-if (CONFIG_IS_DEV)
-    AddMacroDefinitions("DEV_BUILD")
-    message(STATUS "Build type: Development")
-elseif (CONFIG_IS_SHIPPING)
-    AddMacroDefinitions("SHIPPING_BUILD")
-    message(STATUS "Build type: Shipping")
-elseif (CONFIG_IS_PROFILE)
-    AddMacroDefinitions("PROFILE_BUILD")
-    message(STATUS "Build type: Profile (Shipping with debug info)")
-endif ()
+target_compiler_definitions(${PROJECT_NAME})
 
 # platform
 message(STATUS "Building for '${CMAKE_SYSTEM_NAME}' platform")

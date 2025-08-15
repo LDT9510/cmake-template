@@ -1,87 +1,129 @@
-# For C and C++
-BasedOnStyle: LLVM
+# SPDX-License-Identifier: GPL-2.0
+#
+# clang-format configuration file. Intended for clang-format >= 11.
+#
+# For more information, see:
+#
+#   Documentation/dev-tools/clang-format.rst
+#   https://clang.llvm.org/docs/ClangFormat.html
+#   https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+#
+# Extracted from the Linux Kernel (https://github.com/torvalds/linux/blob/master/.clang-format) 
+# Modified by XReaper95
+---
 AccessModifierOffset: -4
-AlignConsecutiveAssignments:
-  Enabled: true
-  AlignCompound: true
-  AcrossComments: true
-  AcrossEmptyLines: false
-  PadOperators: true
-AlignConsecutiveDeclarations:
-  Enabled: true
-  AlignCompound: true
-  AcrossComments: true
-  AcrossEmptyLines: false
-AlignOperands: Align
-AlignTrailingComments: false
-AlignAfterOpenBracket: BlockIndent
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
 AlignEscapedNewlines: Left
-AllowAllParametersOfDeclarationOnNextLine: true
-AllowShortBlocksOnASingleLine: Empty
-AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: InlineOnly
-AllowShortIfStatementsOnASingleLine: true
-AllowShortLoopsOnASingleLine: true
-AllowShortLambdasOnASingleLine: Inline
+AlignOperands: true
+AlignTrailingComments: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
-AlwaysBreakBeforeMultilineStrings: true
-AlwaysBreakTemplateDeclarations: Yes
-LambdaBodyIndentation: OuterScope
-BinPackArguments: false
-BinPackParameters: false
-BreakBeforeBraces: Attach
-BreakConstructorInitializers: AfterColon
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Custom
+BreakBeforeInheritanceComma: false
+BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: false
-BreakBeforeBinaryOperators: NonAssignment
-BreakBeforeInheritanceComma: true
-BreakBeforeTernaryOperators: true
-BreakStringLiterals: true
+BreakConstructorInitializers: BeforeComma
+BreakAfterJavaFieldAnnotations: false
+BreakStringLiterals: false
 ColumnLimit: 100
+CommentPragmas: '^ IWYU pragma:'
+CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ContinuationIndentWidth: 4
-Cpp11BracedListStyle: true
-SpaceBeforeCpp11BracedList: false
-EmptyLineBeforeAccessModifier: LogicalBlock
+ConstructorInitializerIndentWidth: 8
+ContinuationIndentWidth: 8
+Cpp11BracedListStyle: false
+DerivePointerAlignment: false
+DisableFormat: false
+ExperimentalAutoDetectBinPacking: false
+FixNamespaceComments: false
+ForEachMacros: [ ]
 IncludeBlocks: Regroup
 IncludeCategories:
   # first main header for source file always has Priority: 0 (max. priority)
   # then main application (use quotes)
   - Regex: '^".*\.h"'
     Priority: 1
-  # then external library headers (should use the "thirdparty" include convention)
-  - Regex: '^<thirdparty/.*\.h>'
+  # then external library headers 
+  - Regex: '^<(*/.*).h>'
     Priority: 2
   # then system headers, standard or compiler specific
-  - Regex: '^<.*'
+  - Regex: '^<([a-z_]+)(\.h)?>'
     Priority: 3
   # then anything else
   - Regex: '.*'
     Priority: 4
-IndentCaseLabels: true
-IndentWidth: 4
-IndentPPDirectives: BeforeHash
-InsertNewlineAtEOF: true
+IncludeIsMainRegex: '(Test)?$'
+IndentCaseLabels: false
+IndentGotoLabels: false
+IndentPPDirectives: AfterHash
+IndentWidth: 8
+IndentWrappedFunctionNames: false
+JavaScriptQuotes: Leave
+JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: false
 MacroBlockBegin: ''
 MacroBlockEnd: ''
-MaxEmptyLinesToKeep: 2
-NamespaceIndentation: Inner
-PenaltyReturnTypeOnItsOwnLine: 1000
-PackConstructorInitializers: NextLineOnly
-PointerAlignment: Left
-ReferenceAlignment: Left
-SeparateDefinitionBlocks: Leave
-SpaceAfterCStyleCast: true
-SpaceAfterTemplateKeyword: false
-SpaceBeforeRangeBasedForLoopColon: false
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: None
+ObjCBinPackProtocolList: Auto
+ObjCBlockIndentWidth: 8
+ObjCSpaceAfterProperty: true
+ObjCSpaceBeforeProtocolList: true
+
+# Taken from git's rules
+PenaltyBreakAssignment: 10
+PenaltyBreakBeforeFirstCallParameter: 30
+PenaltyBreakComment: 10
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 10
+PenaltyExcessCharacter: 100
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Right
+ReflowComments: Never
+SortIncludes: false
+SortUsingDeclarations: false
+SpaceAfterCStyleCast: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatementsExceptControlMacros
+SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 1
 SpacesInAngles: false
-SpacesInParens: Custom
-SpacesInParensOptions:
-  InCStyleCasts: false
-  InEmptyParentheses: false
-  InConditionalStatements: false
-  Other: false
-SortIncludes: CaseSensitive
-TabWidth: 4
+SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard: Latest
+TabWidth: 8
+UseTab: ForIndentation

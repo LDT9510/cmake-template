@@ -6,25 +6,25 @@ function(setup_target_compiler_definitions TARGET)
     endfunction()
 
     # build type
-    custom_add_macro_definition(${CONFIG_IS_DEV} DEV_BUILD "Build type: Development")
-    custom_add_macro_definition(${CONFIG_IS_SHIPPING} SHIPPING_BUILD "Build type: Shipping")
-    custom_add_macro_definition(${CONFIG_IS_PROFILE} PROFILE_BUILD "Build type: Profile (Shipping with debug info)")
+    custom_add_macro_definition(${DEV_BUILD} DEV_BUILD "Build type: Development")
+    custom_add_macro_definition(${SHIPPING_BUILD} SHIPPING_BUILD "Build type: Shipping")
+    custom_add_macro_definition(${PROFILE_BUILD} PROFILE_BUILD "Build type: Profile (Shipping with debug info)")
 
     # compiler type
-    custom_add_macro_definition(${CXX_COMPILER_IS_GNU_LIKE} COMPILER_GNU_LIKE)
-    custom_add_macro_definition(${CXX_COMPILER_IS_MSVC_LIKE} COMPILER_MSVC_LIKE)
+    custom_add_macro_definition(${COMPILER_GNU_LIKE} COMPILER_GNU_LIKE)
+    custom_add_macro_definition(${COMPILER_MSVC_LIKE} COMPILER_MSVC_LIKE)
 
     # compiler
-    custom_add_macro_definition(${CXX_COMPILER_IS_CLANG} COMPILER_CLANG)
-    custom_add_macro_definition(${CXX_COMPILER_IS_GCC} COMPILER_GCC)
-    custom_add_macro_definition(${CXX_COMPILER_IS_MSVC} COMPILER_MSVC)
+    custom_add_macro_definition(${COMPILER_CLANG} COMPILER_CLANG)
+    custom_add_macro_definition(${COMPILER_GCC} COMPILER_GCC)
+    custom_add_macro_definition(${COMPILER_MSVC} COMPILER_MSVC)
 
     # platform
-    custom_add_macro_definition(${TARGET_PLATFORM_IS_WINDOWS} PLATFORM_WINDOWS)
-    custom_add_macro_definition(${TARGET_PLATFORM_IS_LINUX} PLATFORM_LINUX)
-    custom_add_macro_definition(${TARGET_PLATFORM_IS_MACOS} PLATFORM_MACOS)
-    custom_add_macro_definition(${TARGET_PLATFORM_IS_WEB} PLATFORM_WEB)
+    custom_add_macro_definition(${PLATFORM_WINDOWS} PLATFORM_WINDOWS)
+    custom_add_macro_definition(${PLATFORM_LINUX} PLATFORM_LINUX)
+    custom_add_macro_definition(${PLATFORM_MACOS} PLATFORM_MACOS)
+    custom_add_macro_definition(${PLATFORM_WEB} PLATFORM_WEB)
     
-    # others
-    custom_add_macro_definition(${CONFIG_IS_DEV} ENABLE_ASSERTIONS "Enabling assertions")
+    # others (just an example, not implemented)
+    custom_add_macro_definition(${DEV_BUILD} ENABLE_ASSERTIONS "Enabling assertions")
 endfunction()

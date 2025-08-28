@@ -1,15 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0
-#
-# clang-format configuration file. Intended for clang-format >= 11.
-#
-# For more information, see:
-#
-#   Documentation/dev-tools/clang-format.rst
-#   https://clang.llvm.org/docs/ClangFormat.html
-#   https://clang.llvm.org/docs/ClangFormatStyleOptions.html
-#
-# Extracted from the Linux Kernel (https://github.com/torvalds/linux/blob/master/.clang-format) 
-# Modified by XReaper95
+# Based from the Linux Kernel clang-format file
 ---
 Language: Cpp
 AccessModifierOffset: -4
@@ -52,13 +41,11 @@ BreakBeforeInheritanceComma: false
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: false
 BreakConstructorInitializers: BeforeComma
-BreakAfterJavaFieldAnnotations: false
 BreakStringLiterals: false
 BreakTemplateDeclarations: Yes
 ColumnLimit: 100
-CommentPragmas: '^ IWYU pragma:'
+CommentPragmas: ''
 CompactNamespaces: false
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 8
 ContinuationIndentWidth: 8
 Cpp11BracedListStyle: false
@@ -74,7 +61,7 @@ IncludeCategories:
   - Regex: '^".*\.h"'
     Priority: 1
   # then external library headers 
-  - Regex: '^<(*/.*).h>'
+  - Regex: '^<((glad|imgui_c|SDL3|tracy|stb)/.*).h>'
     Priority: 2
   # then system headers, standard or compiler specific
   - Regex: '^<([a-z_]+)(\.h)?>'
@@ -86,10 +73,8 @@ IncludeIsMainRegex: '(Test)?$'
 IndentCaseLabels: false
 IndentGotoLabels: false
 IndentPPDirectives: AfterHash
-IndentWidth: 8
+IndentWidth: 4
 IndentWrappedFunctionNames: false
-JavaScriptQuotes: Leave
-JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: false
 MacroBlockBegin: ''
 MacroBlockEnd: ''
@@ -99,8 +84,7 @@ ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 8
 ObjCSpaceAfterProperty: true
 ObjCSpaceBeforeProtocolList: true
-
-# Taken from git's rules
+PackConstructorInitializers: Never
 PenaltyBreakAssignment: 10
 PenaltyBreakBeforeFirstCallParameter: 30
 PenaltyBreakComment: 10
@@ -108,8 +92,7 @@ PenaltyBreakFirstLessLess: 0
 PenaltyBreakString: 10
 PenaltyExcessCharacter: 100
 PenaltyReturnTypeOnItsOwnLine: 60
-PointerAlignment: Right
-ReflowComments: Never
+PointerAlignment: Left
 SortIncludes: false
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
@@ -120,12 +103,10 @@ SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: ControlStatementsExceptControlMacros
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 1
+SpacesBeforeTrailingComments: 2
 SpacesInAngles: false
 SpacesInContainerLiterals: false
-SpacesInCStyleCastParentheses: false
-SpacesInParentheses: false
 SpacesInSquareBrackets: false
 Standard: Auto
-TabWidth: 8
+TabWidth: 4
 UseTab: ForIndentation

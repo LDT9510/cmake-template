@@ -1,0 +1,104 @@
+{
+  "version": 10,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 0
+  },
+  "include": [
+    "../base.json",
+    "../toolchains/msvc.json",
+    "../toolchains/clang.json",
+    "../configs/dev.json",
+    "../configs/shipping.json",
+    "../configs/profile.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "win64-dev",
+      "inherits": [
+        "msvc-x64",
+        "config-dev"
+      ]
+    },
+    {
+      "name": "win64-shipping",
+      "inherits": [
+        "msvc-x64",
+        "config-shipping"
+      ]
+    },
+    {
+      "name": "win64-profile",
+      "inherits": [
+        "msvc-x64",
+        "config-profile"
+      ]
+    },
+    {
+      "name": "win64_clang-dev",
+      "inherits": [
+        "win-clang-x64",
+        "config-dev"
+      ]
+    },
+    {
+      "name": "win64_clang-shipping",
+      "inherits": [
+        "win-clang-x64",
+        "config-shipping"
+      ]
+    },
+    {
+      "name": "win64_clang-profile",
+      "inherits": [
+        "win-clang-x64",
+        "config-profile"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "win64-dev",
+      "inherits": [
+        "windows-only-build"
+      ],
+      "configurePreset": "win64-dev"
+    },
+    {
+      "name": "win64-shipping",
+      "inherits": [
+        "windows-only-build"
+      ],
+      "configurePreset": "win64-shipping"
+    },
+    {
+      "name": "win64-profile",
+      "inherits": [
+        "windows-only-build"
+      ],
+      "configurePreset": "win64-profile"
+    },
+    {
+      "name": "win64_clang-dev",
+      "inherits": [
+        "windows-only-build"
+      ],
+      "configurePreset": "win64_clang-dev"
+    },
+    {
+      "name": "win64_clang-shipping",
+      "inherits": [
+        "windows-only-build"
+      ],
+      "configurePreset": "win64_clang-shipping"
+    },
+    {
+      "name": "win64_clang-profile",
+      "inherits": [
+        "windows-only-build"
+      ],
+      "configurePreset": "win64_clang-profile"
+    }
+  ]
+}

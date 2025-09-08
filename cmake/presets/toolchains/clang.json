@@ -1,0 +1,33 @@
+{
+  "version": 10,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 0
+  },
+  "include": [
+    "../base.json"
+  ],
+  "configurePresets": [
+    {
+      "$comment": "Compiler Clang 64-bits for windows.",
+      "name": "win-clang-x64",
+      "hidden": true,
+      "inherits": "base",
+      "toolchainFile": "${sourceDir}/cmake/presets/toolchains/windows/Windows.Clang.toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_PROCESSOR": "AMD64"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "Clang"
+        }
+      }
+    }
+  ]
+}

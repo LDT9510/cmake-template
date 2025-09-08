@@ -1,0 +1,8 @@
+# ignore build directory
+/build
+
+# ignore JetBrains IDE fodlers
+/.idea
+
+# ignore compilation database files
+/compilation_database.json

@@ -1,0 +1,39 @@
+{
+  "version": 10,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "$comment": "This contains all the base paths for the configuration and building.",
+      "name": "base-paths",
+      "hidden": true,
+      "binaryDir": "$env{__BASE_BINARY_DIR}/intermediate",
+      "cacheVariables": {
+        "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "$env{__BASE_BINARY_DIR}/out/bin",
+        "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "$env{__BASE_BINARY_DIR}/out/lib/dynamic",
+        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "$env{__BASE_BINARY_DIR}/out/lib/static"
+      },
+      "environment": {
+        "__BASE_BINARY_DIR": "${sourceDir}/build/${presetName}"
+      }
+    },
+    {
+      "$comment": "Base for the Ninja generator",
+      "name": "ninja-generator",
+      "hidden": true,
+      "generator": "Ninja"
+    },
+    {
+      "$comment": "Base that should be inherited, makes easy to change the generator.",
+      "name": "base",
+      "hidden": true,
+      "inherits": [
+        "base-paths",
+        "ninja-generator"
+      ]
+    }
+  ]
+}

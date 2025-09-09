@@ -2,12 +2,13 @@
 
 #include "core/event_handler.h"
 #include "core/filesystem.h"
+#include "core/timing.h"
 
 #include <glad/gl.h>
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
-
 #include <stb/stb_image.h>
+#include <glm/glm.hpp>
 
 namespace core
 {
@@ -34,7 +35,6 @@ void Renderer::setup_rendering() const
 		-0.5f, -0.5f, 0.0f,
 		 0.5f, -0.5f, 0.0f,
 		 0.0f,  0.5f, 0.0f
-		
    };
 
 	// static constexpr std::array INDICES = {  // note that we start from 0!
@@ -60,7 +60,13 @@ void Renderer::render() const
 	// clear the screen if not drawing in full to avoid flickering
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	m_shader.use();
+	// uniform update
+	float time_value = timing::get_sdl_elapsed_seconds();
+	float green_value = (glm::sin(time_value) / 2.0f) + 0.5f;
+	int   vertex_color_location = glGetUniformLocation(m_shader.m_program_id, "ourColor");
+	glUseProgram(m_shader.m_program_id);  // basically m_shader.use()
+	glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
+	
 	glBindVertexArray(m_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }

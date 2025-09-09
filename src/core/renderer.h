@@ -27,7 +27,9 @@ public:
 private:
 	Shader m_shader;
 	u32    m_vao{};
+	u32    m_vao2{};
 	u32    m_vbo{};
+	u32    m_vbo2{};
 	u32    m_ebo{};
 	u32    m_texture{};
 	b8     m_is_shader_reloading{};

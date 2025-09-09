@@ -61,25 +61,51 @@ void Renderer::setup_rendering() const
 
 void Renderer::render() const
 {
+	// wireframe on/off
+	glPolygonMode(GL_FRONT_AND_BACK, m_is_wireframe_active ? GL_LINE : GL_FILL);
+	
 	// clear the screen if not drawing in full to avoid flickering
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_shader.use();
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
 
 void Renderer::prepare_dev_ui()
 {
 	ImGui::Begin("Learning OpenGL");
+
+	// shorcuts table
+	if (ImGui::CollapsingHeader("Global Shortcuts")) {
+		constexpr ImGuiTableFlags table_flags = ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders;
+		constexpr auto            yellow = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+		if (ImGui::BeginTable("shortcuts", 2, table_flags)) {
+			ImGui::TableSetupColumn("Shortcut", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableSetupColumn("Description", ImGuiTableColumnFlags_WidthFixed);
+			ImGui::TableHeadersRow();
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Indent();
+			{
+				ImGui::TextColored(yellow, "U");
+				ImGui::TableNextColumn();
+				ImGui::Text("Enables wireframe mode");
+			}
+			ImGui::EndTable();
+		}
+	}
+	
 	ImGui::End();
 }
 
 void Renderer::handle_input(const EventHandler& event_handler)
 {
-	(void)event_handler;
+	if (event_handler.is_key_just_pressed(SDLK_U)) {
+		m_is_wireframe_active = !m_is_wireframe_active;
+	}
 }
 
 b8 Renderer::reload_shaders()

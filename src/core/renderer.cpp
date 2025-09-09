@@ -106,8 +106,9 @@ void Renderer::render() const
 	m_shader.use();
 
 	glm::mat4 trans = glm::mat4{ 1.0f };
-	trans = glm::translate(trans, glm::vec3{ 0.5f, -0.5f, 0.0f });
 	trans = glm::rotate(trans, timing::get_sdl_elapsed_seconds(), glm::vec3{ 0.0f, 0.0f, 1.0f });
+	trans = glm::translate(trans, glm::vec3{ 0.5f, -0.5f, 0.0f });
+	
 	
 	m_shader.set_mat4("transform", trans);
 

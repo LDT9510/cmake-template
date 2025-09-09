@@ -28,9 +28,14 @@ void Renderer::setup_rendering() const
 {
 	// clang-format off
 	static constexpr std::array VERTICES = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
+		// first triangle
+		0.5f,  0.5f, 0.0f,  // top right
+		0.5f, -0.5f, 0.0f,  // bottom right
+	   -0.5f,  0.5f, 0.0f,  // top left 
+	   // second triangle
+		0.5f, -0.5f, 0.0f,  // bottom right
+	   -0.5f, -0.5f, 0.0f,  // bottom left
+	   -0.5f,  0.5f, 0.0f   // top left
    };
 	// clang-format on
 	// 0. bind Vertex Array Object and copy our vertices array in a buffer for OpenGL to use
@@ -38,7 +43,7 @@ void Renderer::setup_rendering() const
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES), VERTICES.data(), GL_STATIC_DRAW);
 	// 1. then set the vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 	// 2. use our shader program when we want to render an object
 	m_shader.use();
@@ -55,7 +60,7 @@ void Renderer::render() const
 
 	m_shader.use();
 	glBindVertexArray(m_vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void Renderer::prepare_dev_ui()

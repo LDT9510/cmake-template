@@ -13,21 +13,16 @@ namespace core
 {
 Renderer::Renderer()
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
-        , m_shader2{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader2.frag") }
 {
 	glGenVertexArrays(1, &m_vao);
-	glGenVertexArrays(1, &m_vao2);
 	glGenBuffers(1, &m_vbo);
-	glGenBuffers(1, &m_vbo2);
 	// glGenBuffers(1, &m_ebo);
 }
 
 Renderer::~Renderer()
 {
 	glDeleteVertexArrays(1, &m_vao);
-	glDeleteVertexArrays(1, &m_vao2);
 	glDeleteBuffers(1, &m_vbo);
-	glDeleteBuffers(1, &m_vbo2);
 	// glDeleteBuffers(1, &m_ebo);
 }
 
@@ -36,17 +31,9 @@ void Renderer::setup_rendering() const
 	// clang-format off
 	static constexpr std::array VERTICES = {
 		// first triangle
-		-0.9f, -0.5f, 0.0f,  // left 
-		-0.0f, -0.5f, 0.0f,  // right
-		-0.45f, 0.5f, 0.0f,  // top 
-		
-   };
-
-	static constexpr std::array VERTICES2 = {
-		// second triangle
-		0.0f, -0.5f, 0.0f,  // left
-		0.9f, -0.5f, 0.0f,  // right
-		0.45f, 0.5f, 0.0f   // top 
+		-0.5f, -0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f
 		
    };
 
@@ -55,22 +42,14 @@ void Renderer::setup_rendering() const
 	// 	1, 2, 3    // second triangle
 	// };
 	// clang-format on
-	// triangle 1
+
 	glBindVertexArray(m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES), VERTICES.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
-	// triangle 2
-	glBindVertexArray(m_vao2);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES2), VERTICES2.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-	glEnableVertexAttribArray(0);
-
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::render() const
@@ -84,17 +63,12 @@ void Renderer::render() const
 	m_shader.use();
 	glBindVertexArray(m_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-
-	m_shader2.use();
-	glBindVertexArray(m_vao2);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void Renderer::prepare_dev_ui()
 {
 	ImGui::Begin("Learning OpenGL");
 
-	// shortcuts table
 	if (ImGui::CollapsingHeader("Global Shortcuts")) {
 		constexpr ImGuiTableFlags table_flags = ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders;
 		constexpr auto            yellow = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
@@ -114,6 +88,18 @@ void Renderer::prepare_dev_ui()
 		}
 	}
 
+	if (ImGui::Button("Reload shaders")) {
+		if (!m_is_shader_reloading) {
+			if (reload_shaders()) {  // NOLINT(*-branch-clone)
+				SPDLOG_INFO("All Shaders reloaded OK.");
+			} else {
+				SPDLOG_ERROR("Error reloading shaders.");
+			}
+		} else {
+			SPDLOG_INFO("Already compiling, please wait...");
+		}
+	}
+
 	ImGui::End();
 }
 
@@ -126,6 +112,10 @@ void Renderer::handle_input(const EventHandler& event_handler)
 
 b8 Renderer::reload_shaders()
 {
-	return false;
+	m_is_shader_reloading = true;
+	m_shader = { CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") };
+	m_is_shader_reloading = false;
+
+	return m_shader.is_valid();
 }
 }  // namespace core

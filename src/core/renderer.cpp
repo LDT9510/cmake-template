@@ -12,6 +12,9 @@
 
 namespace core
 {
+
+static f32 g_horizontal_offset = 0.0;
+
 Renderer::Renderer()
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
 {
@@ -47,10 +50,10 @@ void Renderer::setup_rendering() const
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES), VERTICES.data(), GL_STATIC_DRAW);
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -64,13 +67,9 @@ void Renderer::render() const
 	// clear the screen if not drawing in full to avoid flickering
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	// uniform update
-	float time_value = timing::get_sdl_elapsed_seconds();
-	float green_value = (glm::sin(time_value) / 2.0f) + 0.5f;
-	int   vertex_color_location = glGetUniformLocation(m_shader.m_program_id, "ourColor");
-	glUseProgram(m_shader.m_program_id);  // basically m_shader.use()
-	glUniform4f(vertex_color_location, 0.0f, green_value, 0.0f, 1.0f);
-	
+	m_shader.set_float("h_offset", g_horizontal_offset);
+	m_shader.use();
+
 	glBindVertexArray(m_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
@@ -96,6 +95,10 @@ void Renderer::prepare_dev_ui()
 			}
 			ImGui::EndTable();
 		}
+	}
+
+	if (ImGui::CollapsingHeader("Controls")) {
+		ImGui::SliderFloat("Horizontal Offset", &g_horizontal_offset, -0.5f, 0.5f);
 	}
 
 	if (ImGui::Button("Reload shaders")) {

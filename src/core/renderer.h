@@ -26,6 +26,7 @@ public:
 
 private:
 	Shader m_shader;
+	Shader m_shader2;
 	u32    m_vao{};
 	u32    m_vao2{};
 	u32    m_vbo{};

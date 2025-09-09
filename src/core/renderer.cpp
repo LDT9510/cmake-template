@@ -13,6 +13,7 @@ namespace core
 {
 Renderer::Renderer()
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
+        , m_shader2{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader2.frag") }
 {
 	glGenVertexArrays(1, &m_vao);
 	glGenVertexArrays(1, &m_vao2);
@@ -61,14 +62,12 @@ void Renderer::setup_rendering() const
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
-	//triangle 2
+	// triangle 2
 	glBindVertexArray(m_vao2);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES2), VERTICES2.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
-	
-	m_shader.use();
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -78,7 +77,7 @@ void Renderer::render() const
 {
 	// wireframe on/off
 	glPolygonMode(GL_FRONT_AND_BACK, m_is_wireframe_active ? GL_LINE : GL_FILL);
-	
+
 	// clear the screen if not drawing in full to avoid flickering
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -86,6 +85,7 @@ void Renderer::render() const
 	glBindVertexArray(m_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
+	m_shader2.use();
 	glBindVertexArray(m_vao2);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
@@ -94,7 +94,7 @@ void Renderer::prepare_dev_ui()
 {
 	ImGui::Begin("Learning OpenGL");
 
-	// shorcuts table
+	// shortcuts table
 	if (ImGui::CollapsingHeader("Global Shortcuts")) {
 		constexpr ImGuiTableFlags table_flags = ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders;
 		constexpr auto            yellow = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
@@ -113,7 +113,7 @@ void Renderer::prepare_dev_ui()
 			ImGui::EndTable();
 		}
 	}
-	
+
 	ImGui::End();
 }
 

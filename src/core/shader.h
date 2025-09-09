@@ -51,9 +51,9 @@ public:
 	void set_vec3(const std::string& name, f32 x, f32 y, f32 z) const;
 	void set_vec4(const std::string& name, const glm::vec4& value) const;
 	void set_vec4(const std::string& name, f32 x, f32 y, f32 z, f32 w) const;
-	void set_mat2(const std::string& name, const glm::mat2& mat) const;
-	void set_mat3(const std::string& name, const glm::mat3& mat) const;
-	void set_mat4(const std::string& name, const glm::mat4& mat) const;
+	void set_mat2(const std::string& name, const glm::mat2& value) const;
+	void set_mat3(const std::string& name, const glm::mat3& value) const;
+	void set_mat4(const std::string& name, const glm::mat4& value) const;
 
 private:
 	u32        m_program_id = 0;

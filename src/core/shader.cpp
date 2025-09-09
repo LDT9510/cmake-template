@@ -2,6 +2,7 @@
 
 #include <glad/gl.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
 
 namespace core
@@ -110,7 +111,7 @@ void Shader::set_float(const std::string& name, const f32 value) const
 
 void Shader::set_vec2(const std::string& name, const glm::vec2& value) const
 {
-	glUniform2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, &value[0]);
+	glUniform2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(value));
 }
 
 void Shader::set_vec2(const std::string& name, const f32 x, const f32 y) const
@@ -120,7 +121,7 @@ void Shader::set_vec2(const std::string& name, const f32 x, const f32 y) const
 
 void Shader::set_vec3(const std::string& name, const glm::vec3& value) const
 {
-	glUniform3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, &value[0]);
+	glUniform3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(value));
 }
 
 void Shader::set_vec3(const std::string& name, const f32 x, const f32 y, const f32 z) const
@@ -130,7 +131,7 @@ void Shader::set_vec3(const std::string& name, const f32 x, const f32 y, const f
 
 void Shader::set_vec4(const std::string& name, const glm::vec4& value) const
 {
-	glUniform4fv(glGetUniformLocation(m_program_id, name.c_str()), 1, &value[0]);
+	glUniform4fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(value));
 }
 
 void Shader::set_vec4(const std::string& name, const f32 x, const f32 y, const f32 z,
@@ -139,18 +140,21 @@ void Shader::set_vec4(const std::string& name, const f32 x, const f32 y, const f
 	glUniform4f(glGetUniformLocation(m_program_id, name.c_str()), x, y, z, w);
 }
 
-void Shader::set_mat2(const std::string& name, const glm::mat2& mat) const
+void Shader::set_mat2(const std::string& name, const glm::mat2& value) const
 {
-	glUniformMatrix2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	glUniformMatrix2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE,
+	                   glm::value_ptr(value));
 }
 
-void Shader::set_mat3(const std::string& name, const glm::mat3& mat) const
+void Shader::set_mat3(const std::string& name, const glm::mat3& value) const
 {
-	glUniformMatrix3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	glUniformMatrix3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE,
+	                   glm::value_ptr(value));
 }
 
-void Shader::set_mat4(const std::string& name, const glm::mat4& mat) const
+void Shader::set_mat4(const std::string& name, const glm::mat4& value) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE,
+	                   glm::value_ptr(value));
 }
 }  // namespace core

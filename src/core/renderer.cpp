@@ -14,6 +14,8 @@
 namespace core
 {
 
+static float g_mix_factor = 0.2f;
+
 Renderer::Renderer()
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
 {
@@ -37,11 +39,11 @@ void Renderer::setup_rendering()
 {
 	// clang-format off
 	static constexpr std::array VERTICES = {
-		// positions          // colors          // texture coords container
-		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.55f, 0.55f, // top right
-		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.55f, 0.45f, // bottom right
-	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.45f, 0.45f, // bottom left
-	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.45f, 0.55f, // top left 
+		// positions          // colors           // texture coords
+		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
    };
 
 	static constexpr std::array INDICES = {
@@ -103,6 +105,7 @@ void Renderer::render() const
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_shader.use();
+	m_shader.set_float("mixFactor", g_mix_factor);
 
 	glActiveTexture(GL_TEXTURE0);  // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -136,6 +139,10 @@ void Renderer::prepare_dev_ui()
 		}
 	}
 
+	if (ImGui::CollapsingHeader("Tools")) {
+		ImGui::SliderFloat("Mix factor", &g_mix_factor, 0.1f, 0.9f);
+	}
+
 	if (ImGui::Button("Reload shaders")) {
 		if (!m_is_shader_reloading) {
 			if (reload_shaders()) {  // NOLINT(*-branch-clone)
@@ -155,6 +162,14 @@ void Renderer::handle_input(const EventHandler& event_handler)
 {
 	if (event_handler.is_key_just_pressed(SDLK_U)) {
 		m_is_wireframe_active = !m_is_wireframe_active;
+	}
+
+	if (event_handler.is_key_just_pressed(SDLK_UP)) {
+		g_mix_factor += 0.1f;
+	}
+
+	if (event_handler.is_key_just_pressed(SDLK_DOWN)) {
+		g_mix_factor -= 0.1f;
 	}
 }
 

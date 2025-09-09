@@ -21,8 +21,8 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 
 	Window window = Window::initialize_with_context({
 	        .title = "Learning OpenGL",
-	        .width = 800,
-	        .h = 600,
+	        .width = 1280,
+	        .h = 1024,
 	        .is_resizable = false,
 	});
 

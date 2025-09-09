@@ -14,6 +14,13 @@
 namespace core
 {
 
+static constexpr std::array<GLint, 4> WRAP_VALUES{ GL_CLAMP_TO_EDGE, GL_CLAMP_TO_BORDER,
+	                                               GL_MIRRORED_REPEAT, GL_REPEAT };
+
+// defaulted to GL_REPEAT
+static int g_wrap_s_index = 3;
+static int g_wrap_t_index = 3;
+
 Renderer::Renderer()
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
 {
@@ -37,11 +44,11 @@ void Renderer::setup_rendering()
 {
 	// clang-format off
 	static constexpr std::array VERTICES = {
-		// positions          // colors           // texture coords
-		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+		// positions          // colors          // texture coords container - face
+		0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   2.0f, 2.0f, // top right
+		0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   2.0f, 0.0f, // bottom right
+	   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   0.0f, 0.0f, // bottom left
+	   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f,   0.0f, 2.0f // top left 
    };
 
 	static constexpr std::array INDICES = {
@@ -58,20 +65,23 @@ void Renderer::setup_rendering()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INDICES), INDICES.data(), GL_STATIC_DRAW);
 
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(f32), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(f32), nullptr);
 	glEnableVertexAttribArray(0);
 
 	// color attribute
-	glVertexAttribPointer(
-	        1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(f32),
-	        reinterpret_cast<const void*>(3 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(f32),
+	                      (const void*)(3 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
 	glEnableVertexAttribArray(1);
 
 	// texture coordinates attribute
-	glVertexAttribPointer(
-	        2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(f32),
-	        reinterpret_cast<const void*>(6 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(f32),
+	                      (const void*)(6 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
 	glEnableVertexAttribArray(2);
+
+	// texture2 coordinates attribute
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(f32),
+	                      (const void*)(8 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
+	glEnableVertexAttribArray(3);
 
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex
 	// attribute's bound vertex buffer object so afterward we can safely unbind
@@ -108,8 +118,13 @@ void Renderer::render() const
 
 	glActiveTexture(GL_TEXTURE0);  // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_2D, m_texture);
+
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_texture2);
+	// only for happy face
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, WRAP_VALUES[g_wrap_s_index]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, WRAP_VALUES[g_wrap_t_index]);
+
 	glBindVertexArray(m_vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
@@ -134,6 +149,20 @@ void Renderer::prepare_dev_ui()
 				ImGui::Text("Enables wireframe mode");
 			}
 			ImGui::EndTable();
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Tools")) {
+		static bool tied = false;
+		ImGui::Checkbox("Same for both S and T", &tied);
+		constexpr std::array<const char*, 4> items = { "Clamp to Edge", "Clamp to Border",
+													   "Mirrored Repeat", "Repeat" };
+		if (tied) {
+			ImGui::Combo("Wrap", &g_wrap_s_index, items.data(), (int)items.size());
+			g_wrap_t_index = g_wrap_s_index;
+		} else {
+			ImGui::Combo("Wrap S", &g_wrap_s_index, items.data(), (int)items.size());
+			ImGui::Combo("Wrap T", &g_wrap_t_index, items.data(), (int)items.size());
 		}
 	}
 

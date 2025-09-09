@@ -13,8 +13,6 @@
 namespace core
 {
 
-static f32 g_horizontal_offset = 0.0;
-
 Renderer::Renderer()
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
 {
@@ -66,8 +64,7 @@ void Renderer::render() const
 
 	// clear the screen if not drawing in full to avoid flickering
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	m_shader.set_float("h_offset", g_horizontal_offset);
+	
 	m_shader.use();
 
 	glBindVertexArray(m_vao);
@@ -95,10 +92,6 @@ void Renderer::prepare_dev_ui()
 			}
 			ImGui::EndTable();
 		}
-	}
-
-	if (ImGui::CollapsingHeader("Controls")) {
-		ImGui::SliderFloat("Horizontal Offset", &g_horizontal_offset, -0.5f, 0.5f);
 	}
 
 	if (ImGui::Button("Reload shaders")) {

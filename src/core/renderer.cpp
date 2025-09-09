@@ -165,6 +165,8 @@ b8 Renderer::reload_shaders()
 	m_shader = { CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") };
 	m_is_shader_reloading = false;
 
+	setup_rendering();
+
 	return m_shader.is_valid();
 }
 }  // namespace core

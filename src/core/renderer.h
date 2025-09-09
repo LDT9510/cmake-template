@@ -18,7 +18,7 @@ public:
 	Renderer(Renderer&& other) noexcept = default;
 	Renderer& operator=(Renderer&& other) noexcept = default;
 
-	void setup_rendering() const;
+	void setup_rendering();
 	void render() const;
 	void handle_input(const EventHandler& event_handler);
 	void prepare_dev_ui();
@@ -32,6 +32,7 @@ private:
 	u32    m_vbo2{};
 	u32    m_ebo{};
 	u32    m_texture{};
+	u32    m_texture2{};
 	b8     m_is_shader_reloading{};
 	b8     m_is_wireframe_active{};
 };

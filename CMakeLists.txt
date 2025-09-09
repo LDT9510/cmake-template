@@ -36,7 +36,8 @@ set(project_files
         src/core/shader.cpp
         src/core/timing.cpp
         src/core/window.cpp
-        src/dev_ui/dev_ui.cpp)
+        src/dev_ui/dev_ui.cpp
+        src/utils/texture_utils.cpp)
 
 # main executable, includes, linked libraries and compiler flags
 add_executable(${PROJECT_NAME} ${project_files})

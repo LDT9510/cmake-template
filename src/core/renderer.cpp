@@ -3,6 +3,7 @@
 #include "core/event_handler.h"
 #include "core/filesystem.h"
 #include "core/timing.h"
+#include "utils/texture_utils.h"
 
 #include <glad/gl.h>
 #include <imgui/imgui.h>
@@ -20,6 +21,7 @@ Renderer::Renderer()
 	glGenBuffers(1, &m_vbo);
 	glGenBuffers(1, &m_ebo);
 	glGenTextures(1, &m_texture);
+	glGenTextures(1, &m_texture2);
 }
 
 Renderer::~Renderer()
@@ -28,9 +30,10 @@ Renderer::~Renderer()
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteBuffers(1, &m_ebo);
 	glDeleteTextures(1, &m_texture);
+	glDeleteTextures(1, &m_texture2);
 }
 
-void Renderer::setup_rendering() const
+void Renderer::setup_rendering()
 {
 	// clang-format off
 	static constexpr std::array VERTICES = {
@@ -60,14 +63,14 @@ void Renderer::setup_rendering() const
 
 	// color attribute
 	glVertexAttribPointer(
-			1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(f32),
-			reinterpret_cast<const void*>(3 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
+	        1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(f32),
+	        reinterpret_cast<const void*>(3 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
 	glEnableVertexAttribArray(1);
 
 	// texture coordinates attribute
 	glVertexAttribPointer(
-			2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(f32),
-			reinterpret_cast<const void*>(6 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
+	        2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(f32),
+	        reinterpret_cast<const void*>(6 * sizeof(f32)));  // NOLINT(*-no-int-to-ptr)
 	glEnableVertexAttribArray(2);
 
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex
@@ -82,31 +85,13 @@ void Renderer::setup_rendering() const
 	// so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
 	glBindVertexArray(0);
 
-	// load texture from image
-	// load and generate the texture
-	int  width, height, nr_channels;
-	auto image_contents = fs::instance().read_file<std::vector<u8>>(CoreTextureFile("container.jpg"));
-	unsigned char* data = stbi_load_from_memory(image_contents.data(),
-												static_cast<i32>(image_contents.size()), &width,
-												&height, &nr_channels, 0);
-	if (data != nullptr) {
-		// load texture data and configure
-		glBindTexture(GL_TEXTURE_2D, m_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		// set the texture wrapping/filtering options (on the currently bound texture
-		// object)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	load_texture("container.jpg", m_texture);
+	load_texture("awesomeface.png", m_texture2);
 
-		static constexpr std::array BORDER_COLOR = { 1.0f, 1.0f, 0.0f, 1.0f };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, BORDER_COLOR.data());
-		stbi_image_free(data);
-	} else {
-		SPDLOG_ERROR("Failed to load texture");
-	}
+	m_shader.use();  // activate before setting uniforms
+	// inform OpenGL to which texture unit each shader sampler belongs to
+	m_shader.set_int32("texture1", 0);
+	m_shader.set_int32("texture2", 1);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
@@ -118,10 +103,13 @@ void Renderer::render() const
 
 	// clear the screen if not drawing in full to avoid flickering
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+
 	m_shader.use();
 
+	glActiveTexture(GL_TEXTURE0);  // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_texture2);
 	glBindVertexArray(m_vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

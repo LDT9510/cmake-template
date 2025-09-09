@@ -92,12 +92,6 @@ void Renderer::setup_rendering()
 	m_shader.set_int32("texture1", 0);
 	m_shader.set_int32("texture2", 1);
 
-	glm::mat4 trans{ 1.0f };
-	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3{ 0.0f, 0.0f, 1.0f });
-	trans = glm::scale(trans, glm::vec3{ 0.5f, 0.5f, 0.5f });
-
-	m_shader.set_mat4("transform", trans);
-
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
@@ -110,6 +104,12 @@ void Renderer::render() const
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_shader.use();
+
+	glm::mat4 trans = glm::mat4{ 1.0f };
+	trans = glm::translate(trans, glm::vec3{ 0.5f, -0.5f, 0.0f });
+	trans = glm::rotate(trans, timing::get_sdl_elapsed_seconds(), glm::vec3{ 0.0f, 0.0f, 1.0f });
+	
+	m_shader.set_mat4("transform", trans);
 
 	glActiveTexture(GL_TEXTURE0);  // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_2D, m_texture);

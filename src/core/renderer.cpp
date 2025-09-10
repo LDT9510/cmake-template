@@ -154,7 +154,7 @@ void Renderer::prepare_dev_ui()
 
 	if (ImGui::Button("Reload shaders")) {
 		if (!m_is_shader_reloading) {
-			if (reload_shaders()) {  // NOLINT(*-branch-clone)
+			if (reset()) {  // NOLINT(*-branch-clone)
 				SPDLOG_INFO("All Shaders reloaded OK.");
 			} else {
 				SPDLOG_ERROR("Error reloading shaders.");
@@ -174,7 +174,7 @@ void Renderer::handle_input(const EventHandler& event_handler)
 	}
 }
 
-b8 Renderer::reload_shaders()
+b8 Renderer::reset()
 {
 	m_is_shader_reloading = true;
 	m_shader = { CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") };

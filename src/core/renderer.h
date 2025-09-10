@@ -22,7 +22,7 @@ public:
 	void render() const;
 	void handle_input(const EventHandler& event_handler);
 	void prepare_dev_ui();
-	b8   reload_shaders();
+	b8   reset();
 
 private:
 	Shader m_shader;

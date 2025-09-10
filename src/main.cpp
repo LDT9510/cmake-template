@@ -26,14 +26,18 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 	        .is_resizable = false,
 	});
 
-	EventHandler event_handler{ {
-		    .windows_resizing_callback = Window::on_window_resizing,
-		    .windows_quit_callback = [&window]() { window.on_window_quit_event(); },
-	} };
-
 	// requires an initialized OpenGL context
 	Renderer renderer;
 	renderer.setup_rendering();
+
+	EventHandler event_handler{ {
+		    .windows_resizing_callback =
+		            [&renderer](i32 new_x, i32 new_y) {
+		                Window::on_window_resizing(new_x, new_y);
+		                renderer.reset();
+		            },
+		    .windows_quit_callback = [&window]() { window.on_window_quit_event(); },
+	} };
 
 	event_handler.register_keyboard_input_handler(
 	        [&renderer, &window](const EventHandler& handler) {

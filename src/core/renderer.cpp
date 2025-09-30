@@ -18,7 +18,8 @@
 
 namespace core
 {
-
+namespace
+{
 static constexpr auto plane()
 {
 	// clang-format off
@@ -88,9 +89,10 @@ static constexpr std::array CUBE_POSITIONS = {
 	glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
-static float g_fov = glm::radians(45.0f);
-static float g_aspect_ratio = 16.0f / 9.0f;
-static glm::vec3 g_view_translation = {0.0f, 0.0f, -3.0f};
+static float     g_fov = glm::radians(45.0f);
+static float     g_aspect_ratio = 16.0f / 9.0f;
+static glm::vec3 g_view_translation = { 0.0f, 0.0f, -3.0f };
+}
 
 Renderer::Renderer(const core::Window& window)
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
@@ -198,6 +200,11 @@ void Renderer::render() const
 		glm::mat4 model = { 1.0f };
 		model = glm::translate(model, CUBE_POSITIONS[i]);
 		float angle = 20.0f * (float)i;
+
+		if (i % 3 == 0) {
+			angle = timing::get_sdl_elapsed_seconds() * 25.0f;
+		}
+
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		m_shader.set_mat4("model", model);
 
@@ -236,7 +243,7 @@ void Renderer::prepare_dev_ui()
 
 	if (ImGui::Button("Reload shaders")) {
 		if (!m_is_shader_reloading) {
-			if (reset()) { 
+			if (reset()) {
 				SPDLOG_INFO("All Shaders reloaded OK.");
 			} else {
 				SPDLOG_ERROR("Error reloading shaders.");

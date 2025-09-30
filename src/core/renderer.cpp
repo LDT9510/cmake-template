@@ -3,6 +3,7 @@
 #include "core/event_handler.h"
 #include "core/filesystem.h"
 #include "core/timing.h"
+#include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "utils/texture_utils.h"
 
@@ -106,11 +107,18 @@ void Renderer::render() const
 
 	m_shader.use();
 
-	glm::mat4 trans = glm::mat4{ 1.0f };
-	trans = glm::translate(trans, glm::vec3{ 0.5f, -0.5f, 0.0f });
-	trans = glm::rotate(trans, timing::get_sdl_elapsed_seconds(), glm::vec3{ 0.0f, 0.0f, 1.0f });
+	glm::mat4 model = { 1.0f };
+	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	m_shader.set_mat4("transform", trans);
+	glm::mat4 view = { 1.0f };
+	// note that we're translating the scene in the reverse direction of where we want to move
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+	m_shader.set_mat4("model", model);
+	m_shader.set_mat4("view", view);
+	m_shader.set_mat4("projection", projection);
 
 	glActiveTexture(GL_TEXTURE0);  // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -118,15 +126,6 @@ void Renderer::render() const
 	glBindTexture(GL_TEXTURE_2D, m_texture2);
 
 	glBindVertexArray(m_vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-	trans = glm::mat4{ 1.0f };
-	trans = glm::translate(trans, glm::vec3{ -0.5f, 0.5f, 0.0f });
-	trans = glm::scale(trans,
-	                   glm::sin(glm::vec3{ 1.0f, 1.0f, 1.0f } * timing::get_sdl_elapsed_seconds()));
-
-	m_shader.set_mat4("transform", trans);
-
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 

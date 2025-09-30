@@ -7,6 +7,7 @@
 #include <SDL3/SDL.h>
 #include <glad/gl.h>
 #include <spdlog/spdlog.h>
+#include <glm/glm.hpp>
 
 #ifdef _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -143,4 +144,18 @@ SDL_GLContext Window::get_gl_context() const
 {
 	return m_gl_context.get();
 }
+
+glm::vec2 Window::get_resolution() const
+{
+	i32 x, y;
+	SDL_GetWindowSize(m_window.get(), &x, &y);
+	return { (f32)x, (f32)y };
+}
+
+f32 Window::get_aspect_ratio() const
+{
+	auto res = get_resolution();
+	return res.x / res.y;
+}
+
 }  // namespace core

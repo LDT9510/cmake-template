@@ -5,12 +5,13 @@
 
 namespace core
 {
+class Window;
 class EventHandler;
 class Filesystem;
 
 class Renderer {
 public:
-	Renderer();
+	Renderer(const core::Window& window);
 	~Renderer();
 
 	Renderer(const Renderer& other) = delete;
@@ -25,15 +26,16 @@ public:
 	b8   reset();
 
 private:
-	Shader m_shader;
-	u32    m_vao{};
-	u32    m_vao2{};
-	u32    m_vbo{};
-	u32    m_vbo2{};
-	u32    m_ebo{};
-	u32    m_texture{};
-	u32    m_texture2{};
-	b8     m_is_shader_reloading{};
-	b8     m_is_wireframe_active{};
+	Shader              m_shader;
+	u32                 m_vao{};
+	u32                 m_vao2{};
+	u32                 m_vbo{};
+	u32                 m_vbo2{};
+	u32                 m_ebo{};
+	u32                 m_texture{};
+	u32                 m_texture2{};
+	b8                  m_is_shader_reloading{};
+	b8                  m_is_wireframe_active{};
+	const core::Window* m_window;
 };
 }  // namespace core

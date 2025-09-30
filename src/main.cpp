@@ -27,7 +27,7 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 	});
 
 	// requires an initialized OpenGL context
-	Renderer renderer;
+	Renderer renderer {window};
 	renderer.setup_rendering();
 
 	EventHandler event_handler{ {

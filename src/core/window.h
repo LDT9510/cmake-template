@@ -3,6 +3,7 @@
 #include "core/types.h"
 
 #include <SDL3/SDL.h>
+#include <glm/fwd.hpp>
 
 #include <memory>
 #include <string>
@@ -49,6 +50,8 @@ public:
 	void          handle_input(const EventHandler& event_handler);
 	SDL_Window*   get_window_handle() const;
 	SDL_GLContext get_gl_context() const;
+	glm::vec2     get_resolution() const;
+	f32           get_aspect_ratio() const;
 
 private:
 	explicit Window(SDL_Window* window, SDL_GLContext context) noexcept

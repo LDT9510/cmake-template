@@ -15,8 +15,9 @@
 namespace core
 {
 
-Renderer::Renderer()
+Renderer::Renderer(const core::Window& window)
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
+        , m_window{ &window }
 {
 	glGenVertexArrays(1, &m_vao);
 	glGenBuffers(1, &m_vbo);

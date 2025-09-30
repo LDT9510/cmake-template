@@ -3,6 +3,7 @@
 #include "core/event_handler.h"
 #include "core/filesystem.h"
 #include "core/timing.h"
+#include "core/window.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "utils/texture_utils.h"
@@ -80,17 +81,14 @@ static constexpr auto cube()
 }
 
 static constexpr std::array CUBE_POSITIONS = {
-	glm::vec3( 0.0f,  0.0f,  0.0f), 
-	glm::vec3( 2.0f,  5.0f, -15.0f), 
-	glm::vec3(-1.5f, -2.2f, -2.5f),  
-	glm::vec3(-3.8f, -2.0f, -12.3f),  
-	glm::vec3( 2.4f, -0.4f, -3.5f),  
-	glm::vec3(-1.7f,  3.0f, -7.5f),  
-	glm::vec3( 1.3f, -2.0f, -2.5f),  
-	glm::vec3( 1.5f,  2.0f, -2.5f), 
-	glm::vec3( 1.5f,  0.2f, -1.5f), 
-	glm::vec3(-1.3f,  1.0f, -1.5f)  
+	glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(2.0f, 5.0f, -15.0f), glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f), glm::vec3(2.4f, -0.4f, -3.5f), glm::vec3(-1.7f, 3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),   glm::vec3(1.5f, 2.0f, -2.5f),  glm::vec3(1.5f, 0.2f, -1.5f),
+	glm::vec3(-1.3f, 1.0f, -1.5f)
 };
+
+static float g_fov = glm::radians(45.0f);
+static float g_aspect_ratio = 16.0f / 9.0f;
 
 Renderer::Renderer(const core::Window& window)
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
@@ -101,6 +99,8 @@ Renderer::Renderer(const core::Window& window)
 	glGenBuffers(1, &m_ebo);
 	glGenTextures(1, &m_texture);
 	glGenTextures(1, &m_texture2);
+
+	g_aspect_ratio = m_window->get_aspect_ratio();
 }
 
 Renderer::~Renderer()
@@ -178,8 +178,8 @@ void Renderer::render() const
 	// note that we're translating the scene in the reverse direction of where we want to move
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-	
+	glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);
+
 	m_shader.set_mat4("view", view);
 	m_shader.set_mat4("projection", projection);
 
@@ -192,11 +192,10 @@ void Renderer::render() const
 	// since we aren't using indices...
 	// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-	for(unsigned int i = 0; i < 10; i++)
-	{
-		glm::mat4 model = glm::mat4(1.0f);
+	for (unsigned int i = 0; i < 10; i++) {
+		glm::mat4 model = { 1.0f };
 		model = glm::translate(model, CUBE_POSITIONS[i]);
-		float angle = 20.0f * i; 
+		float angle = 20.0f * (float)i;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		m_shader.set_mat4("model", model);
 
@@ -225,6 +224,11 @@ void Renderer::prepare_dev_ui()
 			}
 			ImGui::EndTable();
 		}
+	}
+
+	if (ImGui::CollapsingHeader("Tools")) {
+		ImGui::SliderAngle("FOV", &g_fov, 10.0f, 120.0f);
+		ImGui::SliderFloat("Aspect Ratio", &g_aspect_ratio, 0.1f, 2.0f);
 	}
 
 	if (ImGui::Button("Reload shaders")) {

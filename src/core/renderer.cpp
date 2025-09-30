@@ -6,6 +6,7 @@
 #include "core/window.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "utils/texture_utils.h"
 
 #include <span>
@@ -89,6 +90,7 @@ static constexpr std::array CUBE_POSITIONS = {
 
 static float g_fov = glm::radians(45.0f);
 static float g_aspect_ratio = 16.0f / 9.0f;
+static glm::vec3 g_view_translation = {0.0f, 0.0f, -3.0f};
 
 Renderer::Renderer(const core::Window& window)
         : m_shader{ CoreShaderFile("vertex_shader.vert"), CoreShaderFile("fragment_shader.frag") }
@@ -176,7 +178,7 @@ void Renderer::render() const
 
 	glm::mat4 view = { 1.0f };
 	// note that we're translating the scene in the reverse direction of where we want to move
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	view = glm::translate(view, g_view_translation);
 
 	glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);
 
@@ -229,11 +231,12 @@ void Renderer::prepare_dev_ui()
 	if (ImGui::CollapsingHeader("Tools")) {
 		ImGui::SliderAngle("FOV", &g_fov, 10.0f, 120.0f);
 		ImGui::SliderFloat("Aspect Ratio", &g_aspect_ratio, 0.1f, 2.0f);
+		ImGui::SliderFloat3("View Translation", glm::value_ptr(g_view_translation), -5.0f, 5.0f);
 	}
 
 	if (ImGui::Button("Reload shaders")) {
 		if (!m_is_shader_reloading) {
-			if (reset()) {  // NOLINT(*-branch-clone)
+			if (reset()) { 
 				SPDLOG_INFO("All Shaders reloaded OK.");
 			} else {
 				SPDLOG_ERROR("Error reloading shaders.");

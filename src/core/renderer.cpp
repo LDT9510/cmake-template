@@ -91,6 +91,7 @@ static constexpr std::array CUBE_POSITIONS = {
 
 static float     g_fov = glm::radians(45.0f);
 static float     g_aspect_ratio = 16.0f / 9.0f;
+// note that we're translating the scene in the reverse direction of where we want to move
 static glm::vec3 g_view_translation = { 0.0f, 0.0f, -3.0f };
 }
 
@@ -179,7 +180,6 @@ void Renderer::render() const
 	m_shader.use();
 
 	glm::mat4 view = { 1.0f };
-	// note that we're translating the scene in the reverse direction of where we want to move
 	view = glm::translate(view, g_view_translation);
 
 	glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);

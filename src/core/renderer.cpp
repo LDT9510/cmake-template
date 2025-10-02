@@ -166,6 +166,18 @@ void Renderer::setup_rendering()
 	glEnable(GL_DEPTH_TEST);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+	// CAMERA
+	// position
+	glm::vec3 camera_pos = { 0.0f, 0.0f, 3.0f };
+	// direction
+	glm::vec3 camera_target = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
+	// right axis
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 camera_right = glm::normalize(glm::cross(up, camera_direction));
+	// up axis
+	glm::vec3 camera_up = glm::cross(camera_direction, camera_right);
 }
 
 void Renderer::render() const
@@ -179,8 +191,11 @@ void Renderer::render() const
 
 	m_shader.use();
 
-	glm::mat4 view = { 1.0f };
-	view = glm::translate(view, g_view_translation);
+	const float radius = 10.0f;
+	float cam_x = sin(timing::get_sdl_elapsed_seconds()) * radius;
+	float cam_z = cos(timing::get_sdl_elapsed_seconds()) * radius;
+	glm::mat4 view = glm::lookAt(glm::vec3(cam_x, 0.0f, cam_z), glm::vec3(0.0f, 0.0f, 0.0f),
+	                             glm::vec3(0.0f, 1.0f, 0.0f));
 
 	glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);
 

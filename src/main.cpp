@@ -6,7 +6,9 @@
 #include "utils/helper_macros.h"
 
 #include <SDL3/SDL.h>
+#include <glad/gl.h>
 #include <tracy/Tracy.hpp>
+#include <tracy/TracyOpenGL.hpp>
 
 using namespace core;
 
@@ -25,9 +27,10 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 	        .h = 720,
 	        .is_resizable = true,
 	});
+	TracyGpuContext;
 
 	// requires an initialized OpenGL context
-	Renderer renderer {window};
+	Renderer renderer{ window };
 	renderer.setup_rendering();
 
 	EventHandler event_handler{ {
@@ -53,6 +56,8 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 		renderer.prepare_dev_ui();
 		dev_ui::render_frame();
 		window.gl_swap();
+		FrameMark;
+		TracyGpuCollect;
 	}
 
 	SDL_Quit();

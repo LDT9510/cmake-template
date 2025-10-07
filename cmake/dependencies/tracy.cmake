@@ -12,7 +12,7 @@ block()
 
     # this key is also overridable, but is better to use the build type to 
     # set it, can be forced for other build types
-    if(CONFIG_IS_PROFILE OR ENABLE_TRACY_PROFILING)
+    if(PROFILE_BUILD)
         force_bool(TRACY_ENABLE ON)  # Enable profiling
     else ()
         force_bool(TRACY_ENABLE OFF)  # Disable profiling

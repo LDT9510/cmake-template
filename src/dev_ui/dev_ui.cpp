@@ -4,6 +4,7 @@
 #include <imgui/backend/imgui_impl_opengl3.h>
 #include <imgui/backend/imgui_impl_sdl3.h>
 #include <dev_ui/font_roboto_medium.h>
+#include <tracy/Tracy.hpp>
 
 namespace dev_ui
 {
@@ -20,6 +21,7 @@ void init_for_window(SDL_Window* sdl_window, SDL_GLContext sdl_context)
 
 void create_frame()
 {
+	ZoneScopedN("DevUI start");
 	ImGui_ImplSDL3_NewFrame();
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui::NewFrame();
@@ -27,6 +29,7 @@ void create_frame()
 
 void render_frame()
 {
+	ZoneScopedN("DevUI render");
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

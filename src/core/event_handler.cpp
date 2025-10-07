@@ -1,10 +1,9 @@
-
-
 #include "core/event_handler.h"
 
 #include "dev_ui/dev_ui.h"
 
 #include <SDL3/SDL.h>
+#include <tracy/Tracy.hpp>
 
 namespace core
 {
@@ -17,8 +16,8 @@ EventHandler::EventHandler(Config config)
 // TODO either handle all events here or defer them
 void EventHandler::collect_input()
 {
+	ZoneScopedN("Collect Input");
 	m_last_keyboard_state = m_current_keyboard_state;
-	m_keyboard_input_available = false;
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
@@ -44,12 +43,6 @@ void EventHandler::collect_input()
 				(*m_mouse_offset_fn)(e.motion.xrel, -e.motion.yrel);
 			}
 			break;
-
-		case SDL_EVENT_KEY_DOWN:
-		case SDL_EVENT_KEY_UP:
-			m_keyboard_input_available = true;
-			break;
-
 		default:
 			break;
 		}
@@ -63,7 +56,8 @@ void EventHandler::collect_input()
 
 void EventHandler::process_input() const
 {
-	if (m_keyboard_input_available && m_keyboard_input_handler_fn) {
+	ZoneScopedN("Process Input");
+	if (m_keyboard_input_handler_fn) {
 		(*m_keyboard_input_handler_fn)(*this);
 	}
 }

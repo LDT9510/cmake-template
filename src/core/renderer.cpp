@@ -15,6 +15,8 @@
 #include <spdlog/spdlog.h>
 #include <stb/stb_image.h>
 #include <glm/glm.hpp>
+#include <tracy/Tracy.hpp>
+#include <tracy/TracyOpenGL.hpp>
 
 namespace core
 {
@@ -91,8 +93,10 @@ static constexpr std::array CUBE_POSITIONS = {
 
 static float     g_fov = glm::radians(45.0f);
 static float     g_aspect_ratio = 16.0f / 9.0f;
-// note that we're translating the scene in the reverse direction of where we want to move
-static glm::vec3 g_view_translation = { 0.0f, 0.0f, -3.0f };
+
+static glm::vec3 g_camera_pos = glm::vec3(0.0f, 0.0f, 3.0f);
+static glm::vec3 g_camera_front = glm::vec3(0.0f, 0.0f, -1.0f);
+static glm::vec3 g_camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 Renderer::Renderer(const core::Window& window)
@@ -166,69 +170,68 @@ void Renderer::setup_rendering()
 	glEnable(GL_DEPTH_TEST);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-	// CAMERA
-	// position
-	glm::vec3 camera_pos = { 0.0f, 0.0f, 3.0f };
-	// direction
-	glm::vec3 camera_target = { 0.0f, 0.0f, 0.0f };
-	glm::vec3 camera_direction = glm::normalize(camera_pos - camera_target);
-	// right axis
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 camera_right = glm::normalize(glm::cross(up, camera_direction));
-	// up axis
-	glm::vec3 camera_up = glm::cross(camera_direction, camera_right);
 }
 
 void Renderer::render() const
 {
-	// wireframe on/off
-	glPolygonMode(GL_FRONT_AND_BACK, m_is_wireframe_active ? GL_LINE : GL_FILL);
+	ZoneScopedN("Render");
 
-	// clear the screen if not drawing in full to avoid flickering
-	// clear the depth buffer from the previous frame
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	{
+		ZoneNamedN(RenderSetup, "RenderSetup", true);
+		// wireframe on/off
+		glPolygonMode(GL_FRONT_AND_BACK, m_is_wireframe_active ? GL_LINE : GL_FILL);
 
-	m_shader.use();
+		// clear the screen if not drawing in full to avoid flickering
+		// clear the depth buffer from the previous frame
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	const float radius = 10.0f;
-	float cam_x = sin(timing::get_sdl_elapsed_seconds()) * radius;
-	float cam_z = cos(timing::get_sdl_elapsed_seconds()) * radius;
-	glm::mat4 view = glm::lookAt(glm::vec3(cam_x, 0.0f, cam_z), glm::vec3(0.0f, 0.0f, 0.0f),
-	                             glm::vec3(0.0f, 1.0f, 0.0f));
+		{
+			TracyGpuZone("Shader Setup");
+			m_shader.use();
 
-	glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);
+			glm::mat4 view = glm::lookAt(g_camera_pos, g_camera_pos + g_camera_front, g_camera_up);
 
-	m_shader.set_mat4("view", view);
-	m_shader.set_mat4("projection", projection);
+			glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);
 
-	glActiveTexture(GL_TEXTURE0);  // activate the texture unit first before binding texture
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_texture2);
-
-	glBindVertexArray(m_vao);
-	// since we aren't using indices...
-	// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-	for (unsigned int i = 0; i < 10; i++) {
-		glm::mat4 model = { 1.0f };
-		model = glm::translate(model, CUBE_POSITIONS[i]);
-		float angle = 20.0f * (float)i;
-
-		if (i % 3 == 0) {
-			angle = timing::get_sdl_elapsed_seconds() * 25.0f;
+			m_shader.set_mat4("view", view);
+			m_shader.set_mat4("projection", projection);
 		}
 
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		m_shader.set_mat4("model", model);
+		glActiveTexture(GL_TEXTURE0);  // activate the texture unit first before binding texture
+		glBindTexture(GL_TEXTURE_2D, m_texture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, m_texture2);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(m_vao);
+		// since we aren't using indices...
+		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	}
+
+	{
+		ZoneNamedN(Draw, "Draw", true);
+		for (unsigned int i = 0; i < 10; i++) {
+			glm::mat4 model = { 1.0f };
+			model = glm::translate(model, CUBE_POSITIONS[i]);
+			float angle = 20.0f * (float)i;
+
+			if (i % 3 == 0) {
+				angle = timing::get_sdl_elapsed_seconds() * 25.0f;
+			}
+
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			m_shader.set_mat4("model", model);
+
+			{
+				TracyGpuZone("Draw");
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
+		}
 	}
 }
 
 void Renderer::prepare_dev_ui()
 {
+	ZoneScopedN("Render prepare DevUI");
 	ImGui::Begin("Learning OpenGL");
 
 	if (ImGui::CollapsingHeader("Global Shortcuts")) {
@@ -253,12 +256,11 @@ void Renderer::prepare_dev_ui()
 	if (ImGui::CollapsingHeader("Tools")) {
 		ImGui::SliderAngle("FOV", &g_fov, 10.0f, 120.0f);
 		ImGui::SliderFloat("Aspect Ratio", &g_aspect_ratio, 0.1f, 2.0f);
-		ImGui::SliderFloat3("View Translation", glm::value_ptr(g_view_translation), -5.0f, 5.0f);
 	}
 
 	if (ImGui::Button("Reload shaders")) {
 		if (!m_is_shader_reloading) {
-			if (reset()) {
+			if (reset()) { // NOLINT(*-branch-clone)
 				SPDLOG_INFO("All Shaders reloaded OK.");
 			} else {
 				SPDLOG_ERROR("Error reloading shaders.");
@@ -273,8 +275,21 @@ void Renderer::prepare_dev_ui()
 
 void Renderer::handle_input(const EventHandler& event_handler)
 {
+	const float camera_speed = 0.05f;
 	if (event_handler.is_key_just_pressed(SDLK_U)) {
 		m_is_wireframe_active = !m_is_wireframe_active;
+	}
+	if (event_handler.is_key_pressed(SDLK_W)) {
+		g_camera_pos += camera_speed * g_camera_front;
+	}
+	if (event_handler.is_key_pressed(SDLK_S)) {
+		g_camera_pos -= camera_speed * g_camera_front;
+	}
+	if (event_handler.is_key_pressed(SDLK_A)) {
+		g_camera_pos -= glm::normalize(glm::cross(g_camera_front, g_camera_up)) * camera_speed;
+	}
+	if (event_handler.is_key_pressed(SDLK_D)) {
+		g_camera_pos += glm::normalize(glm::cross(g_camera_front, g_camera_up)) * camera_speed;
 	}
 }
 
@@ -285,6 +300,8 @@ b8 Renderer::reset()
 	m_is_shader_reloading = false;
 
 	setup_rendering();
+
+	g_aspect_ratio = m_window->get_aspect_ratio();
 
 	return m_shader.is_valid();
 }

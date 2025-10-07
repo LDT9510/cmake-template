@@ -61,6 +61,5 @@ private:
 	std::optional<MouseWheelDirectionFn>  m_mouse_wheel_direction_fn;
 	WindowsResizingFn                     m_window_resizing_fn;
 	WindowsQuitFn                         m_window_quit_fn;
-	b8                                    m_keyboard_input_available{};
 };
 }  // namespace core

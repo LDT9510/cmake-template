@@ -1,5 +1,5 @@
 # ignore build directory
-/build
+/_build
 
 # ignore JetBrains IDE fodlers
 /.idea

@@ -93,7 +93,6 @@ static constexpr std::array CUBE_POSITIONS = {
 
 static float     g_fov = glm::radians(45.0f);
 static float     g_aspect_ratio = 16.0f / 9.0f;
-
 static glm::vec3 g_camera_pos = glm::vec3(0.0f, 0.0f, 3.0f);
 static glm::vec3 g_camera_front = glm::vec3(0.0f, 0.0f, -1.0f);
 static glm::vec3 g_camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -188,7 +187,7 @@ void Renderer::render() const
 		{
 			TracyGpuZone("Shader Setup");
 			m_shader.use();
-
+			
 			glm::mat4 view = glm::lookAt(g_camera_pos, g_camera_pos + g_camera_front, g_camera_up);
 
 			glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);
@@ -215,7 +214,7 @@ void Renderer::render() const
 			float angle = 20.0f * (float)i;
 
 			if (i % 3 == 0) {
-				angle = timing::get_sdl_elapsed_seconds() * 25.0f;
+				angle = timing::get_elapsed_seconds() * 25.0f;
 			}
 
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
@@ -260,7 +259,7 @@ void Renderer::prepare_dev_ui()
 
 	if (ImGui::Button("Reload shaders")) {
 		if (!m_is_shader_reloading) {
-			if (reset()) { // NOLINT(*-branch-clone)
+			if (reset()) {  // NOLINT(*-branch-clone)
 				SPDLOG_INFO("All Shaders reloaded OK.");
 			} else {
 				SPDLOG_ERROR("Error reloading shaders.");

@@ -91,11 +91,12 @@ static constexpr std::array CUBE_POSITIONS = {
 	glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
-static float     g_fov = glm::radians(45.0f);
-static float     g_aspect_ratio = 16.0f / 9.0f;
+static f32       g_fov = glm::radians(45.0f);
+static f32       g_aspect_ratio = 16.0f / 9.0f;
 static glm::vec3 g_camera_pos = glm::vec3(0.0f, 0.0f, 3.0f);
 static glm::vec3 g_camera_front = glm::vec3(0.0f, 0.0f, -1.0f);
 static glm::vec3 g_camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
+static f32       g_camera_speed = 2.5f;
 }
 
 Renderer::Renderer(const core::Window& window)
@@ -187,7 +188,7 @@ void Renderer::render() const
 		{
 			TracyGpuZone("Shader Setup");
 			m_shader.use();
-			
+
 			glm::mat4 view = glm::lookAt(g_camera_pos, g_camera_pos + g_camera_front, g_camera_up);
 
 			glm::mat4 projection = glm::perspective(g_fov, g_aspect_ratio, 0.1f, 100.0f);
@@ -255,6 +256,7 @@ void Renderer::prepare_dev_ui()
 	if (ImGui::CollapsingHeader("Tools")) {
 		ImGui::SliderAngle("FOV", &g_fov, 10.0f, 120.0f);
 		ImGui::SliderFloat("Aspect Ratio", &g_aspect_ratio, 0.1f, 2.0f);
+		ImGui::SliderFloat("Camera Speed", &g_camera_speed, 1.0f, 100.0f);
 	}
 
 	if (ImGui::Button("Reload shaders")) {
@@ -274,7 +276,7 @@ void Renderer::prepare_dev_ui()
 
 void Renderer::handle_input(const EventHandler& event_handler)
 {
-	const float camera_speed = 0.05f;
+	const float camera_speed = g_camera_speed * timing::get_delta_time();
 	if (event_handler.is_key_just_pressed(SDLK_U)) {
 		m_is_wireframe_active = !m_is_wireframe_active;
 	}

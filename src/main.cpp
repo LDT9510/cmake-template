@@ -1,6 +1,7 @@
 #include "core/event_handler.h"
 #include "core/filesystem.h"
 #include "core/renderer.h"
+#include "core/timing.h"
 #include "core/window.h"
 #include "dev_ui/dev_ui.h"
 #include "utils/helper_macros.h"
@@ -49,6 +50,7 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 	        });
 
 	while (window.should_stay_open()) {
+		core::timing::update_delta_time();
 		dev_ui::create_frame();
 		event_handler.collect_input();
 		event_handler.process_input();

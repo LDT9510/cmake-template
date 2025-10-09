@@ -5,37 +5,38 @@
 
 namespace core
 {
-class Window;
-class EventHandler;
-class Filesystem;
+	class Window;
+	class EventHandler;
+	class Filesystem;
 
-class Renderer {
-public:
-	Renderer(const core::Window& window);
-	~Renderer();
+	class Renderer
+	{
+	public:
+		explicit Renderer(const core::Window& window);
+		~Renderer();
 
-	Renderer(const Renderer& other) = delete;
-	Renderer& operator=(const Renderer& other) = delete;
-	Renderer(Renderer&& other) noexcept = default;
-	Renderer& operator=(Renderer&& other) noexcept = default;
+		Renderer(const Renderer& other) = delete;
+		Renderer& operator=(const Renderer& other) = delete;
+		Renderer(Renderer&& other) noexcept = default;
+		Renderer& operator=(Renderer&& other) noexcept = default;
 
-	void setup_rendering();
-	void render() const;
-	void handle_input(const EventHandler& event_handler);
-	void prepare_dev_ui();
-	b8   reset();
+		void setup_rendering();
+		void render() const;
+		void handle_input(const EventHandler& event_handler);
+		void prepare_dev_ui();
+		b8   reset();
 
-private:
-	Shader              m_shader;
-	u32                 m_vao{};
-	u32                 m_vao2{};
-	u32                 m_vbo{};
-	u32                 m_vbo2{};
-	u32                 m_ebo{};
-	u32                 m_texture{};
-	u32                 m_texture2{};
-	b8                  m_is_shader_reloading{};
-	b8                  m_is_wireframe_active{};
-	const core::Window* m_window;
-};
+	private:
+		Shader              m_shader;
+		u32                 m_vao{};
+		u32                 m_vao2{};
+		u32                 m_vbo{};
+		u32                 m_vbo2{};
+		u32                 m_ebo{};
+		u32                 m_texture{};
+		u32                 m_texture2{};
+		b8                  m_is_shader_reloading{};
+		b8                  m_is_wireframe_active{};
+		const core::Window* m_window;
+	};
 }  // namespace core

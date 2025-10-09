@@ -4,18 +4,20 @@
 
 #include <spdlog/spdlog.h>
 
-#define check_msg(expr, msg)                             \
-	do {                                                 \
-		if (!(expr)) {                                   \
+#define CHECK_MSG(expr, msg)                             \
+	do                                                   \
+	{                                                    \
+		if (!(expr))                                     \
+		{                                                \
 			SPDLOG_ERROR("Assertion failed: '{}'", msg); \
 			DEBUG_BREAK;                                 \
 		}                                                \
 	} while (0)
 
-#define check(expr) check_msg(expr, #expr)
+#define CHECK(expr) check_msg(expr, #expr)
 
-#define check_unreachable() check_msg(false, "unreachable code reached")
+#define CHECK_UNREACHABLE() check_msg(false, "unreachable code reached")
 
-#define verify_msg(expr, msg) check_msg(expr, msg)
+#define VERIFY_MSG(expr, msg) check_msg(expr, msg)
 
-#define verify(expr) check(expr)
+#define VERIFY(expr) check(expr)

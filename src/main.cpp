@@ -22,12 +22,14 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 
 	fs::create(argv);
 
-	Window window = Window::initialize_with_context({
-	        .title = "Learning OpenGL",
-	        .width = 960,
-	        .h = 720,
-	        .is_resizable = true,
-	});
+	Window window = Window::initialize_with_context(
+	        {
+	                .title = "Learning OpenGL",
+	                .width = 960,
+	                .h = 720,
+	                .is_resizable = true,
+	        }
+	);
 	TracyGpuContext;
 
 	// requires an initialized OpenGL context
@@ -36,20 +38,24 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 
 	EventHandler event_handler{ {
 		    .windows_resizing_callback =
-		            [&renderer](i32 new_x, i32 new_y) {
-		                Window::on_window_resizing(new_x, new_y);
-		                renderer.reset();
-		            },
+		            [&renderer](i32 new_x, i32 new_y)
+		    {
+		        Window::on_window_resizing(new_x, new_y);
+		        renderer.reset();
+		    },
 		    .windows_quit_callback = [&window]() { window.on_window_quit_event(); },
 	} };
 
 	event_handler.register_keyboard_input_handler(
-	        [&renderer, &window](const EventHandler& handler) {
+	        [&renderer, &window](const EventHandler& handler)
+	        {
 		        renderer.handle_input(handler);
 		        window.handle_input(handler);
-	        });
+	        }
+	);
 
-	while (window.should_stay_open()) {
+	while (window.should_stay_open())
+	{
 		core::timing::update_delta_time();
 		dev_ui::create_frame();
 		event_handler.collect_input();

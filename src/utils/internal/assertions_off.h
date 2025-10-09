@@ -3,12 +3,12 @@
 #include "utils/backports.h"
 #include "utils/helper_macros.h"
 
-#define check_msg(expr, msg) NOOP
+#define CHECK_MSG(expr, msg) NOOP
 
-#define check(expr) NOOP
+#define CHECK(expr) NOOP
 
-#define check_unreachable() core::backports::unreachable()
+#define CHECK_UNREACHABLE() core::backports::unreachable()
 
-#define verify_msg(expr, msg) expr
+#define VERIFY_MSG(expr, msg) expr
 
-#define verify(expr) expr
+#define VERIFY(expr) expr

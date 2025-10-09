@@ -36,6 +36,7 @@ set(project_files
         src/core/shader.cpp
         src/core/timing.cpp
         src/core/window.cpp
+        src/core/camera.cpp
         src/dev_ui/dev_ui.cpp
         src/utils/texture_utils.cpp)
 

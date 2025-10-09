@@ -10,6 +10,7 @@ namespace core
 	EventHandler::EventHandler(Config config)
 	        : m_window_resizing_fn{ std::move(config.windows_resizing_callback) }
 	        , m_window_quit_fn{ std::move(config.windows_quit_callback) }
+	        , m_mouse_captured{ true }
 	{
 	}
 
@@ -18,12 +19,15 @@ namespace core
 	{
 		ZoneScopedN("Collect Input");
 		m_last_keyboard_state = m_current_keyboard_state;
-
+		
 		SDL_Event e;
 		while (SDL_PollEvent(&e))
 		{
-			dev_ui::process_input(e);
-
+			if (m_mouse_captured)
+			{
+				dev_ui::process_input(e);
+			}
+			
 			switch (e.type)
 			{
 			case SDL_EVENT_QUIT:
@@ -35,14 +39,14 @@ namespace core
 				break;
 
 			case SDL_EVENT_MOUSE_WHEEL:
-				if (m_mouse_wheel_direction_fn)
+				if (!m_mouse_captured && m_mouse_wheel_direction_fn)
 				{
 					(*m_mouse_wheel_direction_fn)(e.wheel.y);
 				}
 				break;
 
 			case SDL_EVENT_MOUSE_MOTION:
-				if (m_mouse_offset_fn)
+				if (!m_mouse_captured && m_mouse_offset_fn)
 				{
 					(*m_mouse_offset_fn)(e.motion.xrel, -e.motion.yrel);
 				}
@@ -54,19 +58,21 @@ namespace core
 
 		i32       num_keys;
 		const b8* keyboard_state = SDL_GetKeyboardState(&num_keys);
-		std::copy_n(
-		        keyboard_state, num_keys,
-		        m_current_keyboard_state.data()
-		);  // store the previous state
+		std::copy_n(keyboard_state, num_keys,
+		            m_current_keyboard_state.data());  // store the previous state
 	}
 
-	void EventHandler::process_input() const
+	void EventHandler::process_input()
 	{
 		ZoneScopedN("Process Input");
 		if (m_keyboard_input_handler_fn)
 		{
 			(*m_keyboard_input_handler_fn)(*this);
 		}
+	}
+	void EventHandler::toggle_mouse_capture()
+	{
+		m_mouse_captured = !m_mouse_captured;
 	}
 
 	b8 EventHandler::is_key_pressed(SDL_Keycode key_code) const
@@ -83,6 +89,10 @@ namespace core
 	{
 		auto scancode = SDL_GetScancodeFromKey(key_code, nullptr);
 		return m_current_keyboard_state[scancode] && !m_last_keyboard_state[scancode];
+	}
+	b8 EventHandler::is_mouse_captured() const
+	{
+		return m_mouse_captured;
 	}
 
 	void EventHandler::clear_optional_callbacks()

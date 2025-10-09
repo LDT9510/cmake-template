@@ -16,7 +16,7 @@ namespace core
 		using MouseWheelDirectionFn = std::function<void(f32 mouse_wheel_direction)>;
 		using WindowsResizingFn = std::function<void(i32 new_size_x, i32 mew_size_y)>;
 		using WindowsQuitFn = std::function<void()>;
-		using KeyboardInputHandlerFn = std::function<void(const EventHandler& evh)>;
+		using KeyboardInputHandlerFn = std::function<void(EventHandler& evh)>;
 
 	public:
 		struct Config
@@ -50,10 +50,12 @@ namespace core
 
 		void clear_optional_callbacks();
 		void collect_input();
-		void process_input() const;
+		void process_input();
+		void toggle_mouse_capture();
 		b8   is_key_pressed(SDL_Keycode key_code) const;
 		b8   is_key_released(SDL_Keycode key_code) const;
 		b8   is_key_just_pressed(SDL_Keycode key_code) const;
+		b8   is_mouse_captured() const;
 
 	private:
 		std::array<b8, SDL_SCANCODE_COUNT>    m_current_keyboard_state{};
@@ -63,5 +65,6 @@ namespace core
 		std::optional<MouseWheelDirectionFn>  m_mouse_wheel_direction_fn;
 		WindowsResizingFn                     m_window_resizing_fn;
 		WindowsQuitFn                         m_window_quit_fn;
+		b8                                    m_mouse_captured;
 	};
 }  // namespace core

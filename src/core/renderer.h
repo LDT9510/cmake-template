@@ -6,13 +6,14 @@
 namespace core
 {
 	class Window;
+	class Camera;
 	class EventHandler;
 	class Filesystem;
 
 	class Renderer
 	{
 	public:
-		explicit Renderer(const core::Window& window);
+		explicit Renderer(const core::Window& window, const core::Camera& camera);
 		~Renderer();
 
 		Renderer(const Renderer& other) = delete;
@@ -22,7 +23,7 @@ namespace core
 
 		void setup_rendering();
 		void render() const;
-		void handle_input(const EventHandler& event_handler);
+		void handle_input(EventHandler& event_handler);
 		void prepare_dev_ui();
 		b8   reset();
 
@@ -38,5 +39,6 @@ namespace core
 		b8                  m_is_shader_reloading{};
 		b8                  m_is_wireframe_active{};
 		const core::Window* m_window;
+		const core::Camera* m_camera;
 	};
 }  // namespace core

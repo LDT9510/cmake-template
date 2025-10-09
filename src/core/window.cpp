@@ -142,6 +142,14 @@ namespace core
 
 	void Window::handle_input(const EventHandler& event_handler)
 	{
+		if (event_handler.is_mouse_captured())
+		{
+			SDL_SetWindowRelativeMouseMode(m_window.get(), false);
+		} else
+		{
+			SDL_SetWindowRelativeMouseMode(m_window.get(), true);
+		}
+		
 		if (event_handler.is_key_pressed(SDLK_ESCAPE))
 		{
 			m_should_close = true;

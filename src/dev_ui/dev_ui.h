@@ -14,5 +14,6 @@ namespace dev_ui
 	void render_frame();
 	void shutdown();
 	void process_input(const SDL_Event& event);
+	void prepare_shortcuts_ui();
 
 }  // namespace dev_ui

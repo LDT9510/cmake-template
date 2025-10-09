@@ -10,7 +10,6 @@
 
 namespace core
 {
-
 	class EventHandler;
 
 	class Window
@@ -59,8 +58,8 @@ namespace core
 
 	private:
 		explicit Window(SDL_Window* window, SDL_GLContext context) noexcept
-		        : m_window{ window }
-		        , m_gl_context{ context }
+		    : m_window{ window }
+		    , m_gl_context{ context }
 		{
 		}
 

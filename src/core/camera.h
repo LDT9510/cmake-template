@@ -14,8 +14,8 @@ namespace core
 		Camera(f32 pos_x, f32 pos_y, f32 pos_z, f32 up_x, f32 up_y, f32 up_z, f32 yaw, f32 pitch);
 
 		explicit Camera(
-		        glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
-		        f32 yaw = YAW_DEFAULT, f32 pitch = PITCH_DEFAULT
+		    glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+		    f32 yaw = YAW_DEFAULT, f32 pitch = PITCH_DEFAULT
 		);
 
 		glm::mat4 get_view_matrix() const;

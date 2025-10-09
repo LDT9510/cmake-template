@@ -28,12 +28,12 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 	fs::create(argv);
 
 	Window window = Window::initialize_with_context(
-	        {
-	                .title = "Learning OpenGL",
-	                .width = 960,
-	                .h = 720,
-	                .is_resizable = true,
-	        }
+	    {
+	        .title = "Learning OpenGL",
+	        .width = 960,
+	        .h = 720,
+	        .is_resizable = true,
+	    }
 	);
 	TracyGpuContext;
 

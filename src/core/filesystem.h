@@ -32,7 +32,7 @@ namespace core
 	{
 	public:
 		explicit FileType(std::string_view path)
-		        : m_path{ fmt::format("/{}/{}", TBasePath::PATH, path) }
+		    : m_path{ fmt::format("/{}/{}", TBasePath::PATH, path) }
 		{
 		}
 

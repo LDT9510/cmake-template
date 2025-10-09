@@ -3,4 +3,4 @@
 
 #include <string_view>
 
-void load_texture(std::string_view file_name, core::u32 handle);
+void load_texture(std::string_view file_name, u32 handle);

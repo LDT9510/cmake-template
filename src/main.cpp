@@ -19,8 +19,11 @@ i32 main(M_UNUSED i32 argc, M_UNUSED char** argv)
 {
 	TracyNoop;
 
-	// TODO: only if debug
+#if DEV_BUILD
 	spdlog::set_level(spdlog::level::debug);
+#else
+	spdlog::set_level(spdlog::level::info);
+#endif
 
 	fs::create(argv);
 

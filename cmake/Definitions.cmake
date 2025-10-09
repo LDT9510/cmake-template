@@ -33,7 +33,7 @@ function(setup_target_compiler_definitions TARGET)
     custom_add_macro_definition(${DEV_BUILD} SPDLOG_ACTIVE_LEVEL=1 "Log level set to DEBUG") # equivalent to SPDLOG_LEVEL_DEBUG
 
     assign_bool(LOG_LEVEL_INFO SHIPPING_BUILD OR PROFILE_BUILD)
-    custom_add_macro_definition(${LOG_LEVEL_INFO} SPDLOG_ACTIVE_LEVEL=6 "Log level set to INFO") # equivalent to SPDLOG_LEVEL_DEBUG
+    custom_add_macro_definition(${LOG_LEVEL_INFO} SPDLOG_ACTIVE_LEVEL=2 "Log level set to INFO") # equivalent to SPDLOG_LEVEL_INFO
     
     custom_add_macro_definition(${SHIPPING_BUILD} SPDLOG_NO_SOURCE_LOC "Disabling source code showing in logs.")
 endfunction()

@@ -27,7 +27,7 @@ namespace core
 			}
 			else
 			{
-				SPDLOG_INFO("Shader loaded OK: {}", name);
+				SPDLOG_DEBUG("Shader loaded OK: {}", name);
 			}
 
 			return shader_id;
@@ -68,6 +68,11 @@ namespace core
 
 				glDeleteShader(vertex_id);
 				glDeleteShader(fragment_id);
+			}
+
+			if (is_valid)
+			{
+				SPDLOG_DEBUG("Shader program linked sucessfully");
 			}
 
 			return is_valid;

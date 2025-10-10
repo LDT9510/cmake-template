@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/helper_macros.h"
+#include "utils/helper_macros.hpp"
 
 #include <spdlog/spdlog.h>
 

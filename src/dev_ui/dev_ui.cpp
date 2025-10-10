@@ -1,9 +1,10 @@
-#include "dev_ui.h"
+#include "dev_ui.hpp"
+
+#include "dev_ui/embedded_font_roboto_medium.hpp"
 
 #include <SDL3/SDL.h>
 #include <imgui/backend/imgui_impl_opengl3.h>
 #include <imgui/backend/imgui_impl_sdl3.h>
-#include <dev_ui/font_roboto_medium.h>
 #include <tracy/Tracy.hpp>
 
 static constexpr auto YELLOW = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);

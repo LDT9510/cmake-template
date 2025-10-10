@@ -1,12 +1,13 @@
 #include "core/window.h"
 
-#include "core/event_handler.h"
-#include "dev_ui/dev_ui.h"
-#include "utils/assertions.h"
+#include "core/event_handler.hpp"
+#include "dev_ui/dev_ui.hpp"
+#include "utils/assertions.hpp"
 
 #include <SDL3/SDL.h>
 #include <glad/gl.h>
 #include <spdlog/spdlog.h>
+
 #include <glm/glm.hpp>
 
 #ifdef _WIN32
@@ -23,14 +24,12 @@ namespace
 		M_UNUSED const i32     linked = SDL_GetVersion(); /* reported by linked SDL library */
 
 		SPDLOG_INFO(
-		    "Compiled against SDL version: {}.{}.{}", SDL_VERSIONNUM_MAJOR(compiled), SDL_VERSIONNUM_MINOR(compiled),
-		    SDL_VERSIONNUM_MICRO(compiled)
-		);
+		    "Compiled against SDL version: {}.{}.{}", SDL_VERSIONNUM_MAJOR(compiled),
+		    SDL_VERSIONNUM_MINOR(compiled), SDL_VERSIONNUM_MICRO(compiled));
 
 		SPDLOG_INFO(
-		    "Linked against SDL version: {}.{}.{}", SDL_VERSIONNUM_MAJOR(linked), SDL_VERSIONNUM_MINOR(linked),
-		    SDL_VERSIONNUM_MICRO(linked)
-		);
+		    "Linked against SDL version: {}.{}.{}", SDL_VERSIONNUM_MAJOR(linked),
+		    SDL_VERSIONNUM_MINOR(linked), SDL_VERSIONNUM_MICRO(linked));
 	}
 }  // namespace
 
@@ -72,7 +71,8 @@ core::Window core::Window::initialize_with_context(const Config& config)
 	}
 
 	// Create a window and context
-	SDL_Window* window_handle = SDL_CreateWindow(config.title.c_str(), config.width, config.h, sdl_flags);
+	SDL_Window* window_handle =
+	    SDL_CreateWindow(config.title.c_str(), config.width, config.h, sdl_flags);
 
 	if (window_handle == nullptr)
 	{
@@ -90,8 +90,7 @@ core::Window core::Window::initialize_with_context(const Config& config)
 	M_UNUSED const i32 glad_loaded_version = gladLoadGL(SDL_GL_GetProcAddress);
 	SPDLOG_INFO(
 	    "Glad: Loaded OpenGL {}.{} Core Profile", GLAD_VERSION_MAJOR(glad_loaded_version),
-	    GLAD_VERSION_MINOR(glad_loaded_version)
-	);
+	    GLAD_VERSION_MINOR(glad_loaded_version));
 
 	if (M_UNUSED const auto renderer_str = glGetString(GL_RENDERER))
 	{

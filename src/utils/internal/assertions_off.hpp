@@ -1,7 +1,7 @@
 #pragma once
 
-#include "utils/backports.h"
-#include "utils/helper_macros.h"
+#include "utils/backports.hpp"
+#include "utils/helper_macros.hpp"
 
 #define CHECK_MSG(expr, msg) NOOP
 

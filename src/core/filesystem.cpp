@@ -1,4 +1,4 @@
-#include "core/filesystem.h"
+#include "core/filesystem.hpp"
 
 #include <SDL3/SDL_filesystem.h>
 #include <physfs.h>
@@ -23,7 +23,8 @@ core::Filesystem::Filesystem(char** platform_argument)
 	}
 	else
 	{
-		SPDLOG_CRITICAL("Cannot mount virtual filesystem from '{}': {}", m_content_root, PHYSFS_getLastError());
+		SPDLOG_CRITICAL(
+		    "Cannot mount virtual filesystem from '{}': {}", m_content_root, PHYSFS_getLastError());
 	}
 }
 

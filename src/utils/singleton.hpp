@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/assertions.h"
+#include "utils/assertions.hpp"
 
 #include <spdlog/spdlog.h>
 
@@ -14,7 +14,8 @@ namespace core
 	public:
 		static const T& instance()
 		{
-			CHECK_MSG(s_instance != nullptr, std::format("Singleton '{}' not initialized.", s_name));
+			CHECK_MSG(
+			    s_instance != nullptr, std::format("Singleton '{}' not initialized.", s_name));
 			return *s_instance;
 		}
 

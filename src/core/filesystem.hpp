@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/types.h"
-#include "utils/singleton.h"
+#include "core/types.hpp"
+#include "utils/singleton.hpp"
 
 #include <fmt/format.h>
 #include <physfs.h>

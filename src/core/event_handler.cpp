@@ -1,6 +1,6 @@
-#include "core/event_handler.h"
+#include "core/event_handler.hpp"
 
-#include "dev_ui/dev_ui.h"
+#include "dev_ui/dev_ui.hpp"
 
 #include <SDL3/SDL.h>
 #include <tracy/Tracy.hpp>
@@ -56,8 +56,9 @@ void core::EventHandler::collect_input()
 
 	i32       num_keys;
 	const b8* keyboard_state = SDL_GetKeyboardState(&num_keys);
-	std::copy_n(keyboard_state, num_keys,
-	            m_current_keyboard_state.data());  // store the previous state
+	std::copy_n(
+	    keyboard_state, num_keys,
+	    m_current_keyboard_state.data());  // store the previous state
 }
 
 void core::EventHandler::process_input()

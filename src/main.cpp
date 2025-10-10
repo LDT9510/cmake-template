@@ -1,17 +1,17 @@
-#include "core/event_handler.h"
-#include "core/filesystem.h"
-#include "core/renderer.h"
-#include "core/camera.h"
-#include "core/timing.h"
+#include "core/camera.hpp"
+#include "core/event_handler.hpp"
+#include "core/filesystem.hpp"
+#include "core/renderer.hpp"
+#include "core/timing.hpp"
 #include "core/window.h"
-#include "dev_ui/dev_ui.h"
-#include "utils/helper_macros.h"
+#include "dev_ui/dev_ui.hpp"
+#include "utils/helper_macros.hpp"
 
 #include <SDL3/SDL.h>
 #include <glad/gl.h>
+#include <imgui/imgui.h>
 #include <tracy/Tracy.hpp>
 #include <tracy/TracyOpenGL.hpp>
-#include <imgui/imgui.h>
 
 using namespace core;
 

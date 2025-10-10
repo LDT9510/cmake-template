@@ -1,9 +1,10 @@
-#include "shader.h"
+#include "shader.hpp"
 
 #include <glad/gl.h>
+#include <spdlog/spdlog.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <spdlog/spdlog.h>
 
 namespace
 {
@@ -34,8 +35,7 @@ namespace
 	}
 
 	static b8 compile_from_glsl_code(
-	    const std::string& vertex_code, const std::string& fragment_code, u32* out_program_id
-	)
+	    const std::string& vertex_code, const std::string& fragment_code, u32* out_program_id)
 	{
 		using namespace core;
 
@@ -79,7 +79,8 @@ namespace
 	}
 }  // namespace
 
-core::Shader::Shader(const CoreShaderFile& vertex_file_name, const CoreShaderFile& fragment_file_name)
+core::Shader::Shader(
+    const CoreShaderFile& vertex_file_name, const CoreShaderFile& fragment_file_name)
 {
 	auto vertex_source = fs::instance().read_file<std::string>(vertex_file_name);
 	auto fragment_source = fs::instance().read_file<std::string>(fragment_file_name);
@@ -150,22 +151,26 @@ void core::Shader::set_vec4(const std::string& name, const glm::vec4& value) con
 	glUniform4fv(glGetUniformLocation(m_program_id, name.c_str()), 1, glm::value_ptr(value));
 }
 
-void core::Shader::set_vec4(const std::string& name, const f32 x, const f32 y, const f32 z, const f32 w) const
+void core::Shader::set_vec4(
+    const std::string& name, const f32 x, const f32 y, const f32 z, const f32 w) const
 {
 	glUniform4f(glGetUniformLocation(m_program_id, name.c_str()), x, y, z, w);
 }
 
 void core::Shader::set_mat2(const std::string& name, const glm::mat2& value) const
 {
-	glUniformMatrix2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix2fv(
+	    glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void core::Shader::set_mat3(const std::string& name, const glm::mat3& value) const
 {
-	glUniformMatrix3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix3fv(
+	    glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void core::Shader::set_mat4(const std::string& name, const glm::mat4& value) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix4fv(
+	    glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }

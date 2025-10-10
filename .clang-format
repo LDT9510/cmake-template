@@ -2,13 +2,13 @@
 ---
 Language: Cpp
 AccessModifierOffset: -4
-AlignAfterOpenBracket: BlockIndent
+AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: AcrossComments
 AlignEscapedNewlines: Left
 AlignOperands: true
 AlignTrailingComments: false
-AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
@@ -28,28 +28,25 @@ BreakConstructorInitializersBeforeComma: false
 BreakConstructorInitializers: BeforeComma
 BreakStringLiterals: false
 BreakTemplateDeclarations: Yes
-ColumnLimit: 120
-CommentPragmas: ''
+ColumnLimit: 100
 CompactNamespaces: false
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 DisableFormat: false
-ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
-ForEachMacros: [ ]
 IncludeBlocks: Regroup
 IncludeCategories:
   # first main header for source file always has Priority: 0 (max. priority)
   # then main application (use quotes)
-  - Regex: '^".*\.h"'
+  - Regex: '^".*\.(hpp|h)"'
     Priority: 1
   # then external library headers 
-  - Regex: '^<((glad|imgui_c|SDL3|tracy|stb)/.*).h>'
+  - Regex: '<(glad|imgui_c|SDL3|tracy|stb|fmt|gml|physfs|spdlog|imgui)(\/)?.*\.(hpp|h)>'
     Priority: 2
   # then system headers, standard or compiler specific
-  - Regex: '^<([a-z_]+)(\.h)?>'
+  - Regex: '^<.*>'
     Priority: 3
   # then anything else
   - Regex: '.*'
@@ -60,16 +57,15 @@ IndentGotoLabels: false
 IndentPPDirectives: AfterHash
 IndentWidth: 4
 IndentWrappedFunctionNames: false
-KeepEmptyLinesAtTheStartOfBlocks: false
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: false
+  AtStartOfFile: false
 LambdaBodyIndentation: OuterScope
 MacroBlockBegin: ''
 MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All
-ObjCBinPackProtocolList: Auto
-ObjCBlockIndentWidth: 8
-ObjCSpaceAfterProperty: true
-ObjCSpaceBeforeProtocolList: true
 PackConstructorInitializers: Never
 PenaltyBreakAssignment: 10
 PenaltyBreakBeforeFirstCallParameter: 30
@@ -79,7 +75,7 @@ PenaltyBreakString: 10
 PenaltyExcessCharacter: 100
 PenaltyReturnTypeOnItsOwnLine: 1000
 PointerAlignment: Left
-SortIncludes: false
+SortIncludes: true
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
 SpaceAfterTemplateKeyword: false

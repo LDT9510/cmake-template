@@ -1,23 +1,25 @@
-#include "camera.h"
+#include "camera.hpp"
 
-#include "core/event_handler.h"
-#include "core/timing.h"
+#include "core/event_handler.hpp"
+#include "core/timing.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include <algorithm>
 #include <imgui/imgui.h>
+
+#include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 
 enum class CameraMovement : u8
 {
-	None,
-	Forward,
-	Backward,
-	Left,
-	Right
+	NONE,
+	FORWARD,
+	BACKWARD,
+	LEFT,
+	RIGHT
 };
 
-core::Camera::Camera(f32 pos_x, f32 pos_y, f32 pos_z, f32 up_x, f32 up_y, f32 up_z, f32 yaw, f32 pitch)
+core::Camera::Camera(
+    f32 pos_x, f32 pos_y, f32 pos_z, f32 up_x, f32 up_y, f32 up_z, f32 yaw, f32 pitch)
     : m_position{ glm::vec3(pos_x, pos_y, pos_z) }
     , m_front{ glm::vec3(0.0f, 0.0f, -1.0f) }
     , m_world_up{ glm::vec3(up_x, up_y, up_z) }
@@ -73,38 +75,38 @@ void core::Camera::on_mouse_wheel_scroll(f32 mouse_wheel_direction)
 
 void core::Camera::handle_input(const EventHandler& handler)
 {
-	CameraMovement movement_direction = CameraMovement::None;
+	CameraMovement movement_direction = CameraMovement::NONE;
 
 	if (handler.is_key_pressed(SDLK_W))
 	{
-		movement_direction = CameraMovement::Forward;
+		movement_direction = CameraMovement::FORWARD;
 	}
 	if (handler.is_key_pressed(SDLK_S))
 	{
-		movement_direction = CameraMovement::Backward;
+		movement_direction = CameraMovement::BACKWARD;
 	}
 	if (handler.is_key_pressed(SDLK_A))
 	{
-		movement_direction = CameraMovement::Left;
+		movement_direction = CameraMovement::LEFT;
 	}
 	if (handler.is_key_pressed(SDLK_D))
 	{
-		movement_direction = CameraMovement::Right;
+		movement_direction = CameraMovement::RIGHT;
 	}
 
 	f32 velocity = m_movement_speed * timing::get_delta_time();
 	switch (movement_direction)
 	{
-	case CameraMovement::Forward:
+	case CameraMovement::FORWARD:
 		m_position += m_front * velocity;
 		break;
-	case CameraMovement::Backward:
+	case CameraMovement::BACKWARD:
 		m_position -= m_front * velocity;
 		break;
-	case CameraMovement::Left:
+	case CameraMovement::LEFT:
 		m_position -= m_right * velocity;
 		break;
-	case CameraMovement::Right:
+	case CameraMovement::RIGHT:
 		m_position += m_right * velocity;
 		break;
 	default:

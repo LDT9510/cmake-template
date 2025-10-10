@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/types.h"
+#include "core/types.hpp"
 
 #include <SDL3/SDL.h>
 

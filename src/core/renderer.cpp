@@ -1,23 +1,24 @@
-#include "core/renderer.h"
+#include "core/renderer.hpp"
 
-#include "core/camera.h"
-#include "core/event_handler.h"
-#include "core/filesystem.h"
-#include "core/timing.h"
+#include "core/camera.hpp"
+#include "core/event_handler.hpp"
+#include "core/filesystem.hpp"
+#include "core/timing.hpp"
 #include "core/window.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "utils/texture_utils.h"
+#include "utils/texture_utils.hpp"
 
-#include <span>
 #include <glad/gl.h>
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
 #include <stb/stb_image.h>
-#include <glm/glm.hpp>
 #include <tracy/Tracy.hpp>
 #include <tracy/TracyOpenGL.hpp>
+
+#include <glm/glm.hpp>
+#include <span>
 
 namespace
 {
@@ -84,11 +85,13 @@ namespace
 		// clang-format on
 	}
 
-	static constexpr std::array CUBE_POSITIONS = { glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-		                                           glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-		                                           glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-		                                           glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-		                                           glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f) };
+	static constexpr std::array CUBE_POSITIONS = {
+		glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+		glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)
+	};
 
 	static f32 g_aspect_ratio = 16.0f / 9.0f;
 }  // namespace
@@ -138,8 +141,8 @@ void core::Renderer::setup_rendering()
 	glEnableVertexAttribArray(0);
 
 	// texture coordinates attribute
-	// NOLINTNEXTLINE(*-no-int-to-ptr)
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (const void*)(3 * sizeof(f32)));
+	glVertexAttribPointer( // NOLINTNEXTLINE(*-no-int-to-ptr)
+	    1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (const void*)(3 * sizeof(f32)));
 	glEnableVertexAttribArray(1);
 
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex
@@ -186,7 +189,8 @@ void core::Renderer::render() const
 
 			glm::mat4 view = m_camera->get_view_matrix();
 
-			glm::mat4 projection = glm::perspective(glm::radians(m_camera->get_zoom()), g_aspect_ratio, 0.1f, 100.0f);
+			glm::mat4 projection =
+			    glm::perspective(glm::radians(m_camera->get_zoom()), g_aspect_ratio, 0.1f, 100.0f);
 
 			m_shader.set_mat4("view", view);
 			m_shader.set_mat4("projection", projection);

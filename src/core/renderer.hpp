@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/shader.h"
-#include "core/types.h"
+#include "core/shader.hpp"
+#include "core/types.hpp"
 
 namespace core
 {

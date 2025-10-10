@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/filesystem.h"
+#include "core/filesystem.hpp"
 
 #include <glm/fwd.hpp>
 

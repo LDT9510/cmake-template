@@ -1,9 +1,9 @@
-#include "texture_utils.h"
+#include "texture_utils.hpp"
 
-#include "core/filesystem.h"
+#include "core/filesystem.hpp"
 
-#include "glad/gl.h"
-#include "stb/stb_image.h"
+#include <glad/gl.h>
+#include <stb/stb_image.h>
 
 #include <array>
 

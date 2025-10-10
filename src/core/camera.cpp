@@ -28,6 +28,7 @@ core::Camera::Camera(
     , m_movement_speed{ SPEED_DEFAULT }
     , m_mouse_sensitivity{ SENSITIVITY_DEFAULT }
     , m_zoom{ ZOOM_DEFAULT }
+    , m_fps_mode{ false }
 {
 	update_vectors();
 }
@@ -94,6 +95,8 @@ void core::Camera::handle_input(const EventHandler& handler)
 		movement_direction = CameraMovement::RIGHT;
 	}
 
+	f32 current_y_pos = m_position.y;
+
 	f32 velocity = m_movement_speed * timing::get_delta_time();
 	switch (movement_direction)
 	{
@@ -112,6 +115,11 @@ void core::Camera::handle_input(const EventHandler& handler)
 	default:
 		break;
 	}
+
+	if (m_fps_mode)
+	{
+		m_position.y = current_y_pos;
+	}
 }
 
 void core::Camera::prepare_dev_ui()
@@ -121,5 +129,6 @@ void core::Camera::prepare_dev_ui()
 		ImGui::SliderAngle("FOV", &m_zoom, 10.0f, 120.0f);
 		ImGui::SliderFloat("Camera Speed", &m_movement_speed, 1.0f, 100.0f);
 		ImGui::InputFloat3("Camera Position", glm::value_ptr(m_position));
+		ImGui::Checkbox("FPS mode (lock XZ plane)", &m_fps_mode);
 	}
 }

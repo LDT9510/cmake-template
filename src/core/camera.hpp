@@ -51,6 +51,7 @@ namespace core
 		f32       m_mouse_sensitivity;
 		f32       m_zoom;
 		b8        m_fps_mode;
+		b8        m_use_custom_look_at;
 
 		void update_vectors();
 	};

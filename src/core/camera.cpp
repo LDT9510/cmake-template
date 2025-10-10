@@ -9,6 +9,43 @@
 #include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 
+namespace
+{
+	// Custom implementation of the LookAt function
+	static glm::mat4 custom_look_at_matrix(
+	    const glm::vec3& position, const glm::vec3& target, const glm::vec3& world_up)
+	{
+		// 1. Position = known
+		// 2. Calculate cameraDirection
+		glm::vec3 z_axis = glm::normalize(position - target);
+		// 3. Get positive right axis vector
+		glm::vec3 x_axis = glm::normalize(glm::cross(glm::normalize(world_up), z_axis));
+		// 4. Calculate camera up vector
+		glm::vec3 y_axis = glm::cross(z_axis, x_axis);
+
+		// Create translation and rotation matrix
+		// In glm we access elements as mat[col][row] due to column-major layout
+		glm::mat4 translation = { 1.0f };  // Identity matrix by default
+		translation[3][0] = -position.x;  // Fourth column, first row
+		translation[3][1] = -position.y;
+		translation[3][2] = -position.z;
+		glm::mat4 rotation = { 1.0f };
+		rotation[0][0] = x_axis.x;  // First column, first row
+		rotation[1][0] = x_axis.y;
+		rotation[2][0] = x_axis.z;
+		rotation[0][1] = y_axis.x;  // First column, second row
+		rotation[1][1] = y_axis.y;
+		rotation[2][1] = y_axis.z;
+		rotation[0][2] = z_axis.x;  // First column, third row
+		rotation[1][2] = z_axis.y;
+		rotation[2][2] = z_axis.z;
+
+		// Return lookAt matrix as combination of translation and rotation matrix
+		return rotation * translation;  // Remember to read from right to left (first translation
+		                                // then rotation)
+	}
+}  // namespace
+
 enum class CameraMovement : u8
 {
 	NONE,
@@ -29,6 +66,7 @@ core::Camera::Camera(
     , m_mouse_sensitivity{ SENSITIVITY_DEFAULT }
     , m_zoom{ ZOOM_DEFAULT }
     , m_fps_mode{ false }
+    , m_use_custom_look_at{ false }
 {
 	update_vectors();
 }
@@ -51,7 +89,13 @@ void core::Camera::update_vectors()
 
 glm::mat4 core::Camera::get_view_matrix() const
 {
-	return lookAt(m_position, m_position + m_front, m_up);
+	using LookAtFunc = glm::mat4 (*)(
+	    const glm::vec3& position, const glm::vec3& target, const glm::vec3& world_up);
+
+	LookAtFunc look_at_func = m_use_custom_look_at ? &custom_look_at_matrix :
+	                                                 &glm::lookAt<float, glm::defaultp>;
+
+	return look_at_func(m_position, m_position + m_front, m_up);
 }
 
 void core::Camera::on_mouse_movement(f32 x_offset, f32 y_offset, b8 constrain_pitch)
@@ -129,6 +173,7 @@ void core::Camera::prepare_dev_ui()
 		ImGui::SliderAngle("FOV", &m_zoom, 10.0f, 120.0f);
 		ImGui::SliderFloat("Camera Speed", &m_movement_speed, 1.0f, 100.0f);
 		ImGui::InputFloat3("Camera Position", glm::value_ptr(m_position));
+		ImGui::Checkbox("Custom look at matrix", &m_use_custom_look_at);
 		ImGui::Checkbox("FPS mode (lock XZ plane)", &m_fps_mode);
 	}
 }

@@ -170,7 +170,7 @@ void core::Camera::prepare_dev_ui()
 {
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		ImGui::SliderAngle("FOV", &m_zoom, 10.0f, 120.0f);
+		ImGui::SliderFloat("FOV", &m_zoom, 10.0f, 120.0f, "%.0f deg");
 		ImGui::SliderFloat("Camera Speed", &m_movement_speed, 1.0f, 100.0f);
 		ImGui::InputFloat3("Camera Position", glm::value_ptr(m_position));
 		ImGui::Checkbox("Custom look at matrix", &m_use_custom_look_at);

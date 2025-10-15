@@ -74,7 +74,7 @@
   - `include/imgui/**`
   - `src/original_backend/**`
   - `src/*.cpp` (except dcimgui*)
-  - `src/*.`
+  - `src/*.h`
   - `CMakeLists.txt`
   - `LICENSE.txt`
 

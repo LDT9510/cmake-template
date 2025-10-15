@@ -30,7 +30,7 @@ set(IMGUI_SOURCES
         "${SOURCES_DIR}/imgui_draw.cpp"
         "${SOURCES_DIR}/imgui_tables.cpp"
         "${SOURCES_DIR}/imgui_widgets.cpp"
-        $<$<BOOL:${IMGUI_C_DEMO}>:${SOURCES_DIR}/imgui_demo.cpp>)
+        $<$<BOOL:${IMWRAPPER_DEMO}>:${SOURCES_DIR}/imgui_demo.cpp>)
 
 set(IMGUI_BACKEND_SOURCES
         # ========== original sources ==========
@@ -44,9 +44,9 @@ if (IMWRAPPER_C_BINDINGS)
             "${SOURCES_DIR}/dcimgui.cpp"
             "${SOURCES_DIR}/dcimgui_internal.cpp"
             # ========== backend binding sources ==========
-            $<$<BOOL:${IMWRAPPER_WIN32_BACKEND}>:${SOURCES_DIR}/backend_wrapper/win32.cpp>
-            $<$<BOOL:${IMWRAPPER_SDL3_BACKEND}>:${SOURCES_DIR}/backend_wrapper/sdl3.cpp>
-            $<$<BOOL:${IMWRAPPER_OPENGL3_BACKEND}>:${SOURCES_DIR}/backend_wrapper/opengl3.cpp>
+            $<$<BOOL:${IMWRAPPER_WIN32_BACKEND}>:${SOURCES_DIR}/c_backend_wrapper/win32.cpp>
+            $<$<BOOL:${IMWRAPPER_SDL3_BACKEND}>:${SOURCES_DIR}/c_backend_wrapper/sdl3.cpp>
+            $<$<BOOL:${IMWRAPPER_OPENGL3_BACKEND}>:${SOURCES_DIR}/c_backend_wrapper/opengl3.cpp>
     )
 endif ()
 

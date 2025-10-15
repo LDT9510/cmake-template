@@ -18,7 +18,7 @@ include("dependencies/SDL3")
 include("dependencies/fmt")
 include("dependencies/glad")
 include("dependencies/spdlog")
-include("dependencies/imgui-wrapper")
+include("dependencies/imgui-docking-wrapper")
 include("dependencies/glm")
 include("dependencies/physfs")
 include("dependencies/stb_image")
@@ -28,7 +28,7 @@ include("dependencies/tracy")
 announce("Configuring main project")
 
 # project sources
-set(project_files
+set(PROJECT_FILES
         src/main.cpp
         src/core/event_handler.cpp
         src/core/filesystem.cpp
@@ -41,7 +41,7 @@ set(project_files
         src/utils/texture_utils.cpp)
 
 # main executable, includes, linked libraries and compiler flags
-add_executable(${PROJECT_NAME} ${project_files})
+add_executable(${PROJECT_NAME} ${PROJECT_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE "src")
 target_link_libraries(${PROJECT_NAME} PRIVATE
         SDL3::SDL3

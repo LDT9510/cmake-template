@@ -24,9 +24,12 @@ void dev_ui::init_for_window(SDL_Window* sdl_window, SDL_GLContext sdl_context)
 	ImGui_ImplSDL3_InitForOpenGL(sdl_window, sdl_context);
 	ImGui_ImplOpenGL3_Init();
 
-	ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(
-	    &g_roboto_medium_compressed_data, ROBOTO_MEDIUM_COMPRESSED_SIZE, 20.0f
-	);
+	ImGuiIO& io = ImGui::GetIO();
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+	io.Fonts->AddFontFromMemoryCompressedTTF(
+	    &g_roboto_medium_compressed_data, ROBOTO_MEDIUM_COMPRESSED_SIZE, 20.0f);
 }
 
 void dev_ui::create_frame()
@@ -35,6 +38,8 @@ void dev_ui::create_frame()
 	ImGui_ImplSDL3_NewFrame();
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui::NewFrame();
+
+	ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 }
 
 void dev_ui::render_frame()

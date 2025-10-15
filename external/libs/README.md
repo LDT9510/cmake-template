@@ -65,15 +65,16 @@
 
 - Description: Custom Dear ImGui wrapper using CMake, for C (thanks to Dear Bindings) and C++.
 - Upstream: https://github.com/LDT9510/imgui-wrapper
-- Version: `1.92.2` (29267e6b90e9cb49ab5c5de7139493fe3f92ae54)
+- Version: `1.92.3-docking` (f9a1b246a67941c8da951ea36de31153b7931d02)
 - License: `MIT`
-- Updated: `19/08/2025`
-- Wrapped: no, but made by me (LDT)
-- Files extracted from upstream (custom organization):
+- Updated: `15/10/2025`
+- Wrapped: yes, made by me (LDT9510)
+- Files extracted from upstream:
   - `imgui_license`
-  - `include/**`
-  - `src/**`
-  - `tools/**`
+  - `include/imgui/**`
+  - `src/original_backend/**`
+  - `src/*.cpp` (except dcimgui*)
+  - `src/*.`
   - `CMakeLists.txt`
   - `LICENSE.txt`
 

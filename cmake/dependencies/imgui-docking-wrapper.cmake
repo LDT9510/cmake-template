@@ -2,10 +2,10 @@ include("Utils")
 include("ExternalsUtils")
 
 block()
-    set(LIB_NAME "imgui-wrapper")
+    set(LIB_NAME "imgui-docking-wrapper")
     announce("Configuring \"${LIB_NAME}\" external library.")
     
-    force_bool(IMWRAPPER_DEMO ON)
+    force_bool(IMWRAPPER_DEMO OFF)
     force_bool(IMWRAPPER_SDL3_BACKEND ON)
     force_bool(IMWRAPPER_OPENGL3_BACKEND ON)
     force_bool(IMWRAPPER_DISABLE_DEFAULT_FONT ON)
